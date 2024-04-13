@@ -40,8 +40,16 @@ body, html {
 
 }
 
+.cursor {
+    display: inline-block;
+    background-color: lime;
+    margin-left: 5px;
+    animation: blink-animation 1s steps(5, start) infinite;
+    opacity: 0; /* Set to 0 to make the cursor invisible when the animation starts */
+  }
+
 @keyframes flicker {
     0% { opacity: 1; }
-    50% { opacity: 0.8; }
+    50% { opacity: 0.9; }
     100% { opacity: 1; }
 }
