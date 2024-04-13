@@ -1,1 +1,42 @@
-/* This is the main stylesheet for your project. */
+@font-face {
+    font-family: 'PrintChar21';
+    src: url('fonts/PrintChar21.ttf') format('truetype');
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    background-color: black;
+    color: lime;
+    font-family: 'PrintChar21', monospace;
+}
+
+#terminal {
+    width: 560px; /* Adjust as needed to fit 40 characters per line */
+    height: 480px; /* Height to fit 24 lines */
+    overflow: hidden; /* Hide scroll bars */
+    padding: 5px;
+    font-size: 20px; /* Adjust font size to match the original character size */
+    line-height: 1.2;
+    background-color: black;
+    white-space: pre-wrap; /* Allows text to wrap */
+    word-wrap: break-word; /* Breaks the word to prevent overflow */
+    margin: 11px; /* Center the terminal */
+    position: relative;
+    animation: flicker 0.1s infinite;
+}
+
+.menu-bar {
+    background-color: lime;
+    color: black;
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+    white-space: pre; /* Prevents menu bar text from wrapping */
+}
+
+@keyframes flicker {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
