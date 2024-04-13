@@ -6,9 +6,20 @@
 body, html {
     height: 100%;
     margin: 0;
+    padding: 0;
     background-color: black;
     color: lime;
     font-family: 'PrintChar21', monospace;
+    overflow: hidden;
+}
+
+.menu-bar {
+    background-color: rgb(35, 212, 0);
+    color: black;
+    width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+    white-space: nowrap; /* Prevents menu bar text from wrapping */
 }
 
 #terminal {
@@ -16,23 +27,17 @@ body, html {
     height: 480px; /* Height to fit 24 lines */
     overflow: hidden; /* Hide scroll bars */
     padding: 5px;
+    margin: 20px 20px; /* Center the terminal horizontally */
+    margin-top: 10px; /* Add space for the menu bar */
     font-size: 20px; /* Adjust font size to match the original character size */
     line-height: 1.2;
-    background-color: black;
+    background-color: rgb(0, 0, 0);
     white-space: pre-wrap; /* Allows text to wrap */
     word-wrap: break-word; /* Breaks the word to prevent overflow */
-    margin: 11px; /* Center the terminal */
     position: relative;
-    animation: flicker 0.1s infinite;
-}
+    animation: flicker 0.1s infinite alternate;
+    transition: opacity 0.1s; /* Smooth transition for opacity changes */
 
-.menu-bar {
-    background-color: lime;
-    color: black;
-    width: 100%;
-    padding: 5px;
-    box-sizing: border-box;
-    white-space: pre; /* Prevents menu bar text from wrapping */
 }
 
 @keyframes flicker {
