@@ -71,6 +71,22 @@ function bootSequenceOnce(event) {
     }
 }
 
+function animateDots(element, numDots, interval, callback) {
+    let currentDots = 0;
+    const addDot = () => {
+        if (currentDots < numDots) {
+            element.textContent += '.';
+            currentDots++;
+            setTimeout(addDot, interval);
+        } else if (callback) {
+            callback(); // Call the callback function after all dots have been added
+        }
+    };
+    addDot(); // Start adding dots
+}
+
+
+
 // Attach the event listeners for mouse click and key press to start the boot sequence
 document.addEventListener('keydown', bootSequenceOnce, { once: true });
 document.addEventListener('click', bootSequenceOnce, { once: true });
@@ -94,7 +110,7 @@ function displayBootMessages(messages) {
     function updateMessage(index, batchMessages) {
         if (index < batchMessages.length) {
             let message = batchMessages[index];
-            terminal.textContent += `[${message.text}...0%]\n`;
+            terminal.textContent += `${message.text}...0%\n`;
             updateLoadingPercentage(0, index, message, batchMessages);
         }
     }
@@ -102,11 +118,26 @@ function displayBootMessages(messages) {
     function updateLoadingPercentage(loadPercentage, index, message, batchMessages) {
         if (loadPercentage <= 100) {
             setTimeout(() => {
-                terminal.textContent = terminal.textContent.replace(`${message.text}...${loadPercentage}%`, `${message.text}...${loadPercentage + 10}%`);
-                updateLoadingPercentage(loadPercentage + 10, index, message, batchMessages);
-            }, 100);
+                terminal.textContent = terminal.textContent.replace(`${message.text}...${loadPercentage}%`, `${message.text}...${loadPercentage + 01}%`);
+                updateLoadingPercentage(loadPercentage + 01, index, message, batchMessages);
+            }, 10);
         } else {
-            terminal.textContent += `${message.followUp}\n.......\n`;
+            terminal.textContent += `${message.followUp}\n\n`;
+
+            animateDots(terminal, 7, 500, () => { // Add 7 dots with a delay of 500ms between them
+                if (index + 1 < batchMessages.length) {
+                    setTimeout(() => updateMessage(index + 1, batchMessages), 500); // Wait before starting the next message
+                } else {
+                    i += 3;
+                    if (i < messages.length) {
+                        setTimeout(displayBatch, 1500); // Increase delay if needed for dot animation
+                    } else {
+                        terminal.textContent += '\nSYSTEM READY. ENJOY YOUR DAY!\n';
+                        appendCursor();
+                    }
+                }
+            });
+         
             if (index + 1 < batchMessages.length) {
                 updateMessage(index + 1, batchMessages);
             } else {
@@ -114,7 +145,7 @@ function displayBootMessages(messages) {
                 if (i < messages.length) {
                     setTimeout(displayBatch, 1000);
                 } else {
-                    terminal.textContent += '\nSYSTEM READY. ENJOY YOUR DAY!\n]';
+                    terminal.textContent += '\nENJOY YOUR DAY\n]';
                     appendCursor();
                     // setTimeout(displayCursor, 1000); // Display cursor after all messages are displayed
                 }
