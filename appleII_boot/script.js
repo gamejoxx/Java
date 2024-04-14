@@ -17,10 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioCtx.createOscillator();
         oscillator.type = 'square';
-        oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
+        oscillator.frequency.setValueAtTime(680, audioCtx.currentTime);
         oscillator.connect(audioCtx.destination);
         oscillator.start();
-        setTimeout(() => oscillator.stop(), 200);
+        setTimeout(() => oscillator.stop(), 50);
     }
 
     // Function to flash the screen
@@ -55,43 +55,87 @@ document.addEventListener('DOMContentLoaded', function() {
             [array[i], array[j]] = [array[j], array[i]];
         }
     }
-
-    // Function to display boot messages with loading percentages
     function displayBootMessages(messages) {
-        let i = 0;
-        let loadPercentage = 0;
-
-        function nextMessage() {
-            if (i < messages.length) {
-                let message = messages[i];
-                terminal.textContent = `[${message.text}...][${loadPercentage}%]`;
-                if (loadPercentage === 100) {
-                    terminal.textContent += '\n' + message.followUp;
-                    playBeep();
-                    loadPercentage = 0;
-                    i++;
-                    setTimeout(nextMessage, 1000); // Wait 2 seconds before the next message
-                } else {
-                    loadPercentage += 10; // Increase the percentage in increments
-                    setTimeout(nextMessage, 100); // Update the percentage every 100ms
+        let i = 0; // Index for messages array
+    
+        function displayBatch() {
+            clearScreen();
+            let batchMessages = messages.slice(i, i + 3); // Get the next batch of three messages
+    
+            // Function to update each message with a delay
+            function updateMessage(index) {
+                // If it's within our batch array bounds
+                if (index < batchMessages.length) {
+                    let message = batchMessages[index];
+                    let loadPercentage = 0; // Start loading percentage at 0 for each message
+                    // Update the display for the new message
+                    terminal.textContent += `[${message.text}...][${loadPercentage}%]\n`;
+    
+                    // Function to update the loading percentage for this message
+                    function updateLoadingPercentage() {
+                        if (loadPercentage < 100) {
+                            loadPercentage += 10; // Increment the loading percentage
+                            // Update the display with the new percentage
+                            let lines = terminal.textContent.split('\n');
+                            lines[index * 2] = `[${message.text}...][${loadPercentage}%]`; // Adjust line index for batch
+                            terminal.textContent = lines.join('\n');
+                            setTimeout(updateLoadingPercentage, 100); // Update the percentage every 100ms
+                        } else {
+                            // Once message is fully loaded, display its follow-up
+                            terminal.textContent += `${message.followUp}\n`;
+                            // If this is the last message in the batch, initiate the beep and next batch
+                            if (index === batchMessages.length - 1) {
+                                playBeep();
+                                i += 3; // Move to the next batch
+                                if (i < messages.length) {
+                                    // Wait 1 second after the last message to display the next batch
+                                    setTimeout(displayBatch, 1000);
+                                }
+                            } else {
+                                // Otherwise, call updateMessage to display the next message after a delay
+                                setTimeout(() => updateMessage(index + 1), 500); // Delay before next message
+                            }
+                        }
+                    }
+    
+                    updateLoadingPercentage();
                 }
             }
+    
+            // Start updating messages, beginning with the first one
+            updateMessage(0);
         }
-
-        nextMessage(); // Start displaying messages
+    
+        displayBatch(); // Start displaying messages in batches of three
     }
+    
+    
+    
+    
+    
 
-    // Function to initiate the boot sequence
-    function bootSequence() {
-        clearScreen();
-        flashScreen();
-        setTimeout(() => {
-            shuffleArray(bootMessages); // Shuffle messages for random order
-            displayBootMessages(bootMessages); // Display the boot messages
-        }, 100);
+
+// Function to initiate the boot sequence
+function bootSequence() {
+    // clearScreen();
+    // flashScreen();
+    setTimeout(() => {
+        shuffleArray(bootMessages); // Shuffle messages for random order
+        displayBootMessages(bootMessages); // Display the boot messages
+    }, 100);
+    // Remove event listeners after the boot sequence starts
+    document.removeEventListener('keydown', bootSequenceOnce);
+    document.removeEventListener('click', bootSequenceOnce);
+}
+
+// Single handler function to be used for both events
+function bootSequenceOnce(event) {
+    if (event.type === 'keydown' || event.type === 'click') {
+        bootSequence();
     }
+}
 
-    // Event listeners for mouse click or key press to start the boot sequence
-    document.addEventListener('keydown', bootSequence, { once: true });
-    document.addEventListener('click', bootSequence, { once: true });
+// Attach the event listeners for mouse click and key press to start the boot sequence
+document.addEventListener('keydown', bootSequenceOnce, { once: true });
+document.addEventListener('click', bootSequenceOnce, { once: true });
 });
