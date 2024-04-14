@@ -23,8 +23,8 @@ body, html {
 }
 
 #terminal {
-    width: 560px; /* Adjust as needed to fit 40 characters per line */
-    height: 480px; /* Height to fit 24 lines */
+    width: 880%; /* Adjust as needed to fit 40 characters per line */
+    height: 80%x; /* Height to fit 24 lines */
     overflow: hidden; /* Hide scroll bars */
     padding: 5px;
     margin: 20px 20px; /* Center the terminal horizontally */
@@ -42,11 +42,17 @@ body, html {
 
 .cursor {
     display: inline-block;
+    width: 12px;  /* Ensure the cursor has a consistent width */
     background-color: lime;
-    margin-left: 5px;
-    animation: blink-animation 1s steps(5, start) infinite;
-    opacity: 0; /* Set to 0 to make the cursor invisible when the animation starts */
-  }
+    animation: blink-animation 1s steps(2, start) infinite;
+    visibility: visible; /* Ensure the cursor is set to be visible */
+}
+
+@keyframes blink-animation {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
 
 @keyframes flicker {
     0% { opacity: 1; }
