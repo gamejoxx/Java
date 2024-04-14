@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const suns = [
-        { x: 300, y: 450 }, // Initial positions of suns
+        { x: 300, y: 450 },
         { x: 600, y: 450 },
         { x: 450, y: 300 }
     ];
@@ -17,14 +17,26 @@ document.addEventListener('DOMContentLoaded', function () {
     gravitationalStrengthSlider.addEventListener('input', function() {
         physicsConfig.gravitationalStrength = Number(this.value);
     });
+    const trailLengthSlider = document.getElementById('trailLength');
+    const trailFadeSlider = document.getElementById('trailFade');
 
-    // Physics settings (modifiable for fine-tuning)
+    trailLengthSlider.addEventListener('input', function() {
+        physicsConfig.trailLength = Number(this.value);
+    });
+
+    trailFadeSlider.addEventListener('input', function() {
+        physicsConfig.trailFade = Number(this.value);
+    });
+
+    // Physics settings
     const physicsConfig = {
         gravitationalStrength: Number(gravitationalStrengthSlider.value),
-        planetMass: 10,              // Mass of each planet (affects interaction, not currently used)
-        speedDamping: 0.99,         // Damping factor to slow down planets slightly each frame
-        maxSpeed: 20,               // Maximum speed planets can reach
-        safeRadius: 20,             // Initial safe radius around suns, tweak as needed
+        planetMass: 10,
+        speedDamping: 0.99,
+        maxSpeed: 20,
+        safeRadius: 5,
+        trailLength: 50,
+        trailFade: 0.5
     };
 
     canvas.addEventListener('mousedown', function (event) {
@@ -38,9 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     canvas.addEventListener('mouseup', function (event) {
-        suns.forEach(sun => {
-            sun.isDragging = false;
-        });
+        suns.forEach(sun => sun.isDragging = false);
     });
 
     canvas.addEventListener('mousemove', function (event) {
@@ -54,12 +64,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     canvas.addEventListener('contextmenu', function (event) {
         event.preventDefault(); // Prevent the context menu from appearing
-        planets.push({ x: event.offsetX, y: event.offsetY, vx: 0, vy: 0, path: new Path2D(), opacity: 1 });
+        planets.push({
+            x: event.offsetX,
+            y: event.offsetY,
+            vx: 0,
+            vy: 0,
+            trail: [{x: event.offsetX, y: event.offsetY, time: Date.now()}],
+            opacity: 1
+        });
     });
 
     startBtn.addEventListener('click', startSimulation);
     stopBtn.addEventListener('click', stopSimulation);
-    resetBtn.addEventListener('click', resetSimulation);
+    resetBtn.addEventListener('click', function() {
+        planets.length = 0; // Clears all planets
+        stopSimulation();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawSuns();
+    });
 
     function drawSuns() {
         suns.forEach(sun => {
@@ -72,11 +94,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function drawPlanets() {
         planets.forEach(planet => {
+            const currentTime = Date.now();
+            planet.trail = planet.trail.filter(point => currentTime - point.time < physicsConfig.trailLength * 100);
+            if (planet.trail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(planet.trail[0].x, planet.trail[0].y);
+                for (let i = 1; i < planet.trail.length - 1; i++) {
+                    let cp1x = (planet.trail[i].x + planet.trail[i + 1].x) / 2;
+                    let cp1y = (planet.trail[i].y + planet.trail[i + 1].y) / 2;
+                    ctx.quadraticCurveTo(planet.trail[i].x, planet.trail[i].y, cp1x, cp1y);
+                }
+                ctx.strokeStyle = `rgba(255, 255, 255, ${physicsConfig.trailFade})`;
+                ctx.stroke();
+            }
             ctx.beginPath();
-            planet.path.moveTo(planet.x, planet.y);
-            planet.path.lineTo(planet.x + planet.vx, planet.y + planet.vy);
-            ctx.strokeStyle = `rgba(255, 255, 255, ${planet.opacity})`;
-            ctx.stroke(planet.path);
             ctx.arc(planet.x, planet.y, 2, 0, 2 * Math.PI);
             ctx.fillStyle = 'white';
             ctx.fill();
@@ -95,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function () {
     
                 let force;
                 if (dist < physicsConfig.safeRadius) {
-                    // Reduce the gravitational force as the planet approaches the sun's safe radius
                     force = physicsConfig.gravitationalStrength / (distSquared * (physicsConfig.safeRadius / dist));
                 } else {
                     force = physicsConfig.gravitationalStrength / distSquared;
@@ -108,7 +138,6 @@ document.addEventListener('DOMContentLoaded', function () {
             planet.vx += ax;
             planet.vy += ay;
     
-            // Apply damping and speed limit
             const speed = Math.sqrt(planet.vx * planet.vx + planet.vy * planet.vy);
             if (speed > physicsConfig.maxSpeed) {
                 planet.vx = (planet.vx / speed) * physicsConfig.maxSpeed;
@@ -120,18 +149,12 @@ document.addEventListener('DOMContentLoaded', function () {
     
             planet.x += planet.vx;
             planet.y += planet.vy;
-    
-            // Wrap around logic
-            planet.x = (planet.x + canvas.width) % canvas.width;
-            planet.y = (planet.y + canvas.height) % canvas.height;
-    
-            planet.opacity *= 0.99; // Decay the opacity for the trail effect
+            planet.trail.push({x: planet.x, y: planet.y, time: Date.now()});
         });
     }
-    
 
     function animate() {
-        ctx.fillStyle = `rgba(0, 0, 0, 0.8)`; // Trail fade effect
+        ctx.fillStyle = `rgba(0, 0, 0, ${1 - physicsConfig.trailFade})`; // Trail fade effect adjusted dynamically
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         drawSuns();
         drawPlanets();
@@ -150,14 +173,5 @@ document.addEventListener('DOMContentLoaded', function () {
             cancelAnimationFrame(animationFrameId);
             animationFrameId = null;
         }
-    }
-
-    function resetSimulation() {
-        planets.forEach(planet => {
-            planet.path = new Path2D(); // Reset the path
-        });
-        stopSimulation();
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawSuns();
     }
 });
