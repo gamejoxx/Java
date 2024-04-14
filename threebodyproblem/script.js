@@ -21,9 +21,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Physics settings (modifiable for fine-tuning)
     const physicsConfig = {
         gravitationalStrength: Number(gravitationalStrengthSlider.value),
-        planetMass: 5,              // Mass of each planet (affects interaction, not currently used)
+        planetMass: 10,              // Mass of each planet (affects interaction, not currently used)
         speedDamping: 0.99,         // Damping factor to slow down planets slightly each frame
-        maxSpeed: 18                // Maximum speed planets can reach
+        maxSpeed: 20,               // Maximum speed planets can reach
+        safeRadius: 20,             // Initial safe radius around suns, tweak as needed
     };
 
     canvas.addEventListener('mousedown', function (event) {
@@ -91,34 +92,43 @@ document.addEventListener('DOMContentLoaded', function () {
                 const dy = sun.y - planet.y;
                 const distSquared = dx * dx + dy * dy;
                 const dist = Math.sqrt(distSquared);
-                const force = physicsConfig.gravitationalStrength / distSquared;
+    
+                let force;
+                if (dist < physicsConfig.safeRadius) {
+                    // Reduce the gravitational force as the planet approaches the sun's safe radius
+                    force = physicsConfig.gravitationalStrength / (distSquared * (physicsConfig.safeRadius / dist));
+                } else {
+                    force = physicsConfig.gravitationalStrength / distSquared;
+                }
+    
                 ax += (dx / dist) * force;
                 ay += (dy / dist) * force;
             });
-
+    
             planet.vx += ax;
             planet.vy += ay;
-
+    
             // Apply damping and speed limit
             const speed = Math.sqrt(planet.vx * planet.vx + planet.vy * planet.vy);
             if (speed > physicsConfig.maxSpeed) {
                 planet.vx = (planet.vx / speed) * physicsConfig.maxSpeed;
                 planet.vy = (planet.vy / speed) * physicsConfig.maxSpeed;
             }
-
+    
             planet.vx *= physicsConfig.speedDamping;
             planet.vy *= physicsConfig.speedDamping;
-
+    
             planet.x += planet.vx;
             planet.y += planet.vy;
-
+    
             // Wrap around logic
             planet.x = (planet.x + canvas.width) % canvas.width;
             planet.y = (planet.y + canvas.height) % canvas.height;
-
+    
             planet.opacity *= 0.99; // Decay the opacity for the trail effect
         });
     }
+    
 
     function animate() {
         ctx.fillStyle = `rgba(0, 0, 0, 0.8)`; // Trail fade effect
