@@ -20,6 +20,27 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => oscillator.stop(), 50);
     }
 
+    function playMultipleBeeps() {
+        let count = Math.floor(Math.random() * 3) + 1; // Random number of beeps between 1 and 10
+        let beepInterval = 20; // Interval between beeps in milliseconds
+        let frequency = 50; // Low frequency for beeps
+    
+        (function beepLoop(i) {
+            if (i < count) {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                oscillator.type = 'square';
+                oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime); // Low frequency beep
+                oscillator.connect(audioCtx.destination);
+                oscillator.start();
+                setTimeout(() => oscillator.stop(), 50); // Short beep
+    
+                setTimeout(() => beepLoop(i + 1), beepInterval);
+            }
+        })(0);
+    }
+    
+
     function flashScreen() {
         terminal.style.backgroundColor = 'green';
         setTimeout(() => terminal.style.backgroundColor = '', 50);
@@ -30,15 +51,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const bootMessages = [
-        { text: 'PERFORMING MEMORY INTEGRITY CHECK.........', followUp: 'COMPLETE - ALL 2048KB FUNCTIONAL AND SECURE.' },
-        { text: 'LOADING PRIMARY KERNEL........', followUp: 'KERNEL LOADED. "A SECURE TOMORROW STARTS TODAY WITH VAULT-TEC."' },
-        { text: 'ESTABLISHING NETWORK CONNECTIONS........', followUp: 'CONNECTING...CONNECTING...SUCCESS!' },
-        { text: 'BOOTSTRAP LOADER INITIALIZED........', followUp: 'CONFIGURING SYSTEM MODULES...' },
-        { text: 'LOADING RESOURCE PACKAGES........', followUp: 'INITIATING SYSTEM PROTOCOLS... ENABLING SURVIVAL MECHANISMS...' },
-        { text: 'SYSTEM DIAGNOSTICS RUNNING........', followUp: 'PRIMARY: OKAY, SECONDARY: OKAY, TERTIARY: (THAT\'S CLASSIFIED)' },
-        { text: 'ACTIVATING USER INTERFACE........', followUp: 'VAULT-TEC INTERFACE ONLINE. WELCOME, OVERSEER!' },
-        { text: 'LOADING PERSONALIZED SETTINGS........', followUp: 'PREFERENCES SET, VAULT LIVING MADE COMFORTABLE (CONDITIONALLY).' },
-        { text: 'FINALIZING BOOT SEQUENCE........', followUp: 'SYSTEM STABILIZATION COMPLETE. READY TO ASSIST.' },
+        { text: 'PERFORMING MEMORY INTEGRITY CHECK.........', followUp: 'COMPLETE - ALL 2048KB FUNCTIONAL AND SECURE.\n' },
+        { text: 'LOADING PRIMARY KERNEL........', followUp: 'KERNEL LOADED. "A SECURE TOMORROW STARTS TODAY WITH VAULT-TEC."\n' },
+        { text: 'ESTABLISHING NETWORK CONNECTIONS........', followUp: 'CONNECTING...CONNECTING...SUCCESS!\n' },
+        { text: 'BOOTSTRAP LOADER INITIALIZED........', followUp: 'CONFIGURING SYSTEM MODULES...\n' },
+        { text: 'LOADING RESOURCE PACKAGES........', followUp: 'INITIATING SYSTEM PROTOCOLS... ENABLING SURVIVAL MECHANISMS...\n' },
+        { text: 'SYSTEM DIAGNOSTICS RUNNING........', followUp: 'PRIMARY: OKAY, SECONDARY: OKAY, TERTIARY: (THAT\'S CLASSIFIED)\n' },
+        { text: 'ACTIVATING USER INTERFACE........', followUp: 'VAULT-TEC INTERFACE ONLINE. WELCOME, OVERSEER!\n' },
+        { text: 'LOADING PERSONALIZED SETTINGS........', followUp: 'PREFERENCES SET, VAULT LIVING MADE COMFORTABLE (CONDITIONALLY).\n' },
+        { text: 'FINALIZING BOOT SEQUENCE........', followUp: 'SYSTEM STABILIZATION COMPLETE. READY TO ASSIST.\n' },
     ];
 
     function shuffleArray(array) {
@@ -54,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (currentDots < numDots) {
                 element.textContent += '.';
                 currentDots++;
+                // playMultipleBeeps();
                 setTimeout(addDot, interval);
             } else if (callback) {
                 callback();
@@ -62,16 +84,23 @@ document.addEventListener('DOMContentLoaded', function() {
         addDot();
     }
 
-    function maybeAnimateDots(index, batchMessages, nextAction) {
-        const randomChance = Math.random();
-        const randomNumDots = Math.floor(Math.random() * 10) + 5;
-        const randomInterval = Math.random() * (500 - 100) + 100;
-        if (randomChance < 0.5) {
-            animateDots(terminal, randomNumDots, randomInterval, nextAction);
-        } else {
+function maybeAnimateDots(index, batchMessages, nextAction) {
+    const randomChance = Math.random();
+    const randomNumDots = Math.floor(Math.random() * 10) + 10;
+    const randomInterval = Math.random() * (100 - 10) + 10;
+    if (randomChance < 0.6) {
+        animateDots(terminal, randomNumDots, randomInterval, () => {
+            // playBeep();
+           // playMultipleBeeps();
+           // flashScreen();
             nextAction();
-        }
+            
+        });
+    } else {
+        nextAction();
     }
+}
+
 
     function displayBootMessages(messages) {
         let i = 0;
@@ -91,9 +120,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function updateLoadingPercentage(loadPercentage, index, message, batchMessages) {
-            const randomDelay = Math.random() * (100 - 20) + 50;
-            const randomIncrement = Math.floor(Math.random() * 15) + 1;
-            const maxPercentage = 100 + Math.round(Math.random() * 10);
+            const randomDelay = Math.random() * (100 - 2)-50;
+            const randomIncrement = Math.floor(Math.random() * 01) + 1;
+            const maxPercentage = 100 + Math.round(Math.random() * -1);
             
             if (loadPercentage <= maxPercentage) {
                 setTimeout(() => {
@@ -114,6 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             setTimeout(displayBatch, Math.random() * 1500);
                         } else {
                             terminal.textContent += '\nSYSTEM READY. ENJOY YOUR DAY!\n';
+                            playMultipleBeeps();
+                            flashScreen();
                             appendCursor();
                         }
                     }
@@ -139,6 +170,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function bootSequenceOnce(event) {
         if (event.type === 'keydown' || event.type === 'click') {
+            playBeep();
+            // playMultipleBeeps();
+            flashScreen();
             bootSequence();
         }
     }
