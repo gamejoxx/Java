@@ -55,7 +55,8 @@ document.addEventListener('DOMContentLoaded', function() {
         { text: 'LOADING PRIMARY KERNEL........', followUp: 'KERNEL LOADED. "A SECURE TOMORROW STARTS TODAY WITH VAULT-TEC."\n' },
         { text: 'ESTABLISHING NETWORK CONNECTIONS........', followUp: 'CONNECTING...CONNECTING...SUCCESS!\n' },
         { text: 'BOOTSTRAP LOADER INITIALIZED........', followUp: 'CONFIGURING SYSTEM MODULES...\n' },
-        { text: 'LOADING RESOURCE PACKAGES........', followUp: 'INITIATING SYSTEM PROTOCOLS... ENABLING SURVIVAL MECHANISMS...\n' },
+        { text: 'TEST........', followUp: '\n' },
+//        { text: 'LOADING RESOURCE PACKAGES........', followUp: 'INITIATING SYSTEM PROTOCOLS ' animateDots(), ' ENABLING SURVIVAL MECHANISMS...\n' },
         { text: 'SYSTEM DIAGNOSTICS RUNNING........', followUp: 'PRIMARY: OKAY, SECONDARY: OKAY, TERTIARY: (THAT\'S CLASSIFIED)\n' },
         { text: 'ACTIVATING USER INTERFACE........', followUp: 'VAULT-TEC INTERFACE ONLINE. WELCOME, OVERSEER!\n' },
         { text: 'LOADING PERSONALIZED SETTINGS........', followUp: 'PREFERENCES SET, VAULT LIVING MADE COMFORTABLE (CONDITIONALLY).\n' },
@@ -107,7 +108,8 @@ function maybeAnimateDots(index, batchMessages, nextAction) {
 
         function displayBatch() {
             clearScreen();
-            let batchMessages = messages.slice(i, i + 3);
+            let numessages = Math.floor(Math.random() * 4) + 2;
+            let batchMessages = messages.slice(i, i + numessages);
             updateMessage(0, batchMessages);
         }
 
@@ -121,7 +123,7 @@ function maybeAnimateDots(index, batchMessages, nextAction) {
 
         function updateLoadingPercentage(loadPercentage, index, message, batchMessages) {
             const randomDelay = Math.random() * (100 - 2)-50;
-            const randomIncrement = Math.floor(Math.random() * 01) + 1;
+            const randomIncrement = Math.floor(Math.random() * 1) + 1;
             const maxPercentage = 100 + Math.round(Math.random() * -1);
             
             if (loadPercentage <= maxPercentage) {
@@ -177,6 +179,9 @@ function maybeAnimateDots(index, batchMessages, nextAction) {
         }
     }
 
+
+    document.addEventListener('click', flashScreen);
+    document.addEventListener('keydown', flashScreen);
     document.addEventListener('keydown', bootSequenceOnce, { once: true });
     document.addEventListener('click', bootSequenceOnce, { once: true });
 });
