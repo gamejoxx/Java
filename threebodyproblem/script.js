@@ -86,8 +86,9 @@ document.addEventListener('DOMContentLoaded', function () {
     function drawSuns() {
         suns.forEach(sun => {
             ctx.beginPath();
-            ctx.arc(sun.x, sun.y, 15, 0, 2 * Math.PI);
+            ctx.arc(sun.x, sun.y, 10, 0, 2 * Math.PI);
             ctx.fillStyle = 'yellow';
+            // opacity = 0;
             ctx.fill();
         });
     }
@@ -97,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const currentTime = Date.now();
             planet.trail = planet.trail.filter(point => currentTime - point.time < physicsConfig.trailLength * 100);
             if (planet.trail.length > 1) {
-                ctx.beginPath();
+               ctx.beginPath();
                 ctx.moveTo(planet.trail[0].x, planet.trail[0].y);
                 for (let i = 1; i < planet.trail.length - 1; i++) {
                     let cp1x = (planet.trail[i].x + planet.trail[i + 1].x) / 2;
@@ -105,6 +106,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     ctx.quadraticCurveTo(planet.trail[i].x, planet.trail[i].y, cp1x, cp1y);
                 }
                 ctx.strokeStyle = `rgba(255, 255, 255, ${physicsConfig.trailFade})`;
+                ctx.lineWidth = 0.1;
+                ctx.lineCap = 'round';                             
                 ctx.stroke();
             }
             ctx.beginPath();
