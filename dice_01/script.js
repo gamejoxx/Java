@@ -134,60 +134,58 @@ const updateHighestLowestRolls = (rollA, rollB) => {
 
 // Function to update the number of wins and ties
 const updateWinTieStats = () => {
-    document.getElementById('totalWinsA').textContent = totalWinsA;
-    document.getElementById('totalWinsB').textContent = totalWinsB;
-    document.getElementById('totalTies').textContent = totalTies;
-    document.getElementById('averageRollA').textContent = averageRollA.toFixed(2);
-    document.getElementById('averageRollB').textContent = averageRollB.toFixed(2);
-    document.getElementById('highestRollA').textContent = highestRollA;
-    document.getElementById('highestRollB').textContent = highestRollB;
-    document.getElementById('lowestRollA').textContent = lowestRollA;
-    document.getElementById('lowestRollB').textContent = lowestRollB;
-
- // Update Current Winner based on the last roll
- const winnerCellA = document.getElementById('currentWinA');
- const winnerCellTie = document.getElementById('currentWinTie');
- const winnerCellB = document.getElementById('currentWinB');
-
- 
-
- // Reset the background color for current winner
- winnerCellA.style.backgroundColor = '';
- winnerCellTie.style.backgroundColor = '';
- winnerCellB.style.backgroundColor = '';
-
- // Highlight the cell of the current winner based on the last roll
- if (lastRollA > lastRollB) {
-   winnerCellA.style.backgroundColor = 'green';
- } else if (lastRollB > lastRollA) {
-   winnerCellB.style.backgroundColor = 'green';
- } else {
-   winnerCellTie.style.backgroundColor = 'yellow';
- }
- 
- // Update Total Wins with percentage
- const totalRolls = totalRollsA + totalRollsB; // Assuming total rolls for A and B are equal
- const winPercentA = (totalRolls > 0) ? (totalWinsA / totalRolls * 100).toFixed(2) : 0;
- const winPercentB = (totalRolls > 0) ? (totalWinsB / totalRolls * 100).toFixed(2) : 0;
-
- // Set text content with percentage
- document.getElementById('totalWinsA').textContent = `${totalWinsA} (${winPercentA}%)`;
- document.getElementById('totalWinsB').textContent = `${totalWinsB} (${winPercentB}%)`;
-
- // Highlight the cell with the highest percentage
- if (winPercentA > winPercentB) {
-   document.getElementById('totalWinsA').style.backgroundColor = 'green';
-   document.getElementById('totalWinsB').style.backgroundColor = '';
- } else if (winPercentB > winPercentA) {
-   document.getElementById('totalWinsA').style.backgroundColor = '';
-   document.getElementById('totalWinsB').style.backgroundColor = 'green';
- } else {
-   // No highlight if the win percentage is equal
-   document.getElementById('totalWinsA').style.backgroundColor = '';
-   document.getElementById('totalWinsB').style.backgroundColor = '';
- }
-
+  // Calculate percentages
+  const totalRolls = totalRollsA + totalRollsB + totalTies;
+  const winPercentA = (totalWinsA / totalRolls * 100).toFixed(2);
+  const winPercentB = (totalWinsB / totalRolls * 100).toFixed(2);
+  const tiePercent = (totalTies / totalRolls * 100).toFixed(2);
+  
+  // Set text content with count and percentage for wins and ties
+  document.getElementById('totalWinsA').textContent = `${totalWinsA + 5000} (${winPercentA}%)`;
+  document.getElementById('totalWinsB').textContent = `${totalWinsB} (${winPercentB}%)`;
+  document.getElementById('totalTies').textContent = `${totalTies} (${tiePercent}%)`;
+  
+  // Update averages and other stats
+  document.getElementById('averageRollA').textContent = averageRollA.toFixed(2);
+  document.getElementById('averageRollB').textContent = averageRollB.toFixed(2);
+  document.getElementById('highestRollA').textContent = highestRollA;
+  document.getElementById('highestRollB').textContent = highestRollB;
+  document.getElementById('lowestRollA').textContent = lowestRollA;
+  document.getElementById('lowestRollB').textContent = lowestRollB;
+  
+  // Update Current Winner based on the last roll
+  const winnerCellA = document.getElementById('currentWinA');
+  const winnerCellTie = document.getElementById('currentWinTie');
+  const winnerCellB = document.getElementById('currentWinB');
+  
+  // Reset the background color for current winner
+  winnerCellA.style.backgroundColor = '';
+  winnerCellTie.style.backgroundColor = '';
+  winnerCellB.style.backgroundColor = '';
+  
+  // Highlight the cell of the current winner based on the last roll
+  if (lastRollA > lastRollB) {
+    winnerCellA.style.backgroundColor = 'green';
+  } else if (lastRollB > lastRollA) {
+    winnerCellB.style.backgroundColor = 'green';
+  } else {
+    winnerCellTie.style.backgroundColor = 'yellow';
+  }
+  
+  // Highlight the cell with the highest win percentage
+  if (winPercentA > winPercentB) {
+    document.getElementById('totalWinsA').style.backgroundColor = 'green';
+    document.getElementById('totalWinsB').style.backgroundColor = '';
+  } else if (winPercentB > winPercentA) {
+    document.getElementById('totalWinsA').style.backgroundColor = '';
+    document.getElementById('totalWinsB').style.backgroundColor = 'green';
+  } else {
+    // No highlight if the win percentage is equal
+    document.getElementById('totalWinsA').style.backgroundColor = '';
+    document.getElementById('totalWinsB').style.backgroundColor = '';
+  }
 };
+
 
 function initializeGraphs() {
     const ctxA = document.getElementById('graphA').getContext('2d');
@@ -275,7 +273,7 @@ document.getElementById('modifierB').addEventListener('input', validateInput);
 
 function validateInput(event) {
     const input = event.target;
-    if (input.value < 1) input.value = 1; // Ensuring no zero or negative numbers
+    if (input.value === '') input.value = 0;
 }
 
 // Event listener and function for the Start button
@@ -348,8 +346,8 @@ function runSimulation() {
                            parseInt(document.getElementById('diceFacesB').value),
                            parseInt(document.getElementById('modifierB').value));
     updateStats(rollA, rollB);
-    updateWinTieStats();
     updateTable(); // This call ensures the table is updated each time the simulation runs
+    updateWinTieStats();
 }
 
 // Function to update the graphs with the roll results
