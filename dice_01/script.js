@@ -141,7 +141,7 @@ const updateWinTieStats = () => {
   const tiePercent = (totalTies / totalRolls * 100).toFixed(2);
   
   // Set text content with count and percentage for wins and ties
-  document.getElementById('totalWinsA').textContent = `${totalWinsA + 5000} (${winPercentA}%)`;
+  document.getElementById('totalWinsA').textContent = `${totalWinsA} (${winPercentA}%)`;
   document.getElementById('totalWinsB').textContent = `${totalWinsB} (${winPercentB}%)`;
   document.getElementById('totalTies').textContent = `${totalTies} (${tiePercent}%)`;
   
