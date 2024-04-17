@@ -92,25 +92,37 @@ const updateStats = (rollA, rollB) => {
     totalRollsB++;
     lastRollA = rollA;
     lastRollB = rollB;
-    
+  
     rollHistoryA.push(rollA);
     rollHistoryB.push(rollB);
-    
+  
     if (rollA > rollB) {
-        totalWinsA++;
-        graphDataA.wins++;
+      totalWinsA++;
+      graphDataA.wins++;
     } else if (rollB > rollA) {
-        totalWinsB++;
-        graphDataB.wins++;
+      totalWinsB++;
+      graphDataB.wins++;
     } else {
-        totalTies++;
+      totalTies++;
     }
-
+  
     // Update average, highest and lowest rolls
     averageRollA = calculateAverage(rollHistoryA);
     averageRollB = calculateAverage(rollHistoryB);
     updateHighestLowestRolls(rollA, rollB);
-};
+  
+    // Count the frequency of each roll for graph A
+    graphDataA.data[rollA] = (graphDataA.data[rollA] || 0) + 1;
+    graphDataA.labels = Object.keys(graphDataA.data).map(Number);
+  
+    // Count the frequency of each roll for graph B
+    graphDataB.data[rollB] = (graphDataB.data[rollB] || 0) + 1;
+    graphDataB.labels = Object.keys(graphDataB.data).map(Number);
+  
+    // Update the graphs
+    updateGraphs();
+  };
+  
 
 // Function to update the highest and lowest rolls
 const updateHighestLowestRolls = (rollA, rollB) => {
@@ -132,6 +144,83 @@ const updateWinTieStats = () => {
     document.getElementById('lowestRollA').textContent = lowestRollA;
     document.getElementById('lowestRollB').textContent = lowestRollB;
 };
+
+function initializeGraphs() {
+    const ctxA = document.getElementById('graphA').getContext('2d');
+    const ctxB = document.getElementById('graphB').getContext('2d');
+  
+    chartA = new Chart(ctxA, {
+      type: 'bar', // Changed to 'bar' type for frequency
+      data: {
+        labels: graphDataA.labels, // The roll numbers
+        datasets: [{
+          label: 'Number of Rolls',
+          data: graphDataA.data,
+          backgroundColor: 'rgb(75, 192, 192)'
+        }]
+      },
+      options: {
+        animation: false, // Disable animations
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Number of Times Rolled'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Roll'
+            }
+          }
+        }
+      }
+    });
+  
+    chartB = new Chart(ctxB, {
+      type: 'bar', // Changed to 'bar' type for frequency
+      data: {
+        labels: graphDataB.labels, // The roll numbers
+        datasets: [{
+          label: 'Number of Rolls',
+          data: graphDataB.data,
+          backgroundColor: 'rgb(255, 99, 132)'
+        }]
+      },
+      options: {
+        animation: false, // Disable animations
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Number of Times Rolled'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Roll'
+            }
+          }
+        }
+      }
+    });
+  }
+  
+  function updateGraphs() {
+    chartA.data.labels = graphDataA.labels;
+    chartA.data.datasets[0].data = Object.values(graphDataA.data);
+    chartA.update();
+  
+    chartB.data.labels = graphDataB.labels;
+    chartB.data.datasets[0].data = Object.values(graphDataB.data);
+    chartB.update();
+  }
+  
+
 
 
 // Event listeners for input validation
@@ -288,6 +377,9 @@ function initializeSimulation() {
     // Set the default simulation speed from the speed control slider
     setSimulationSpeed();
     document.getElementById('speedControl').addEventListener('change', setSimulationSpeed);
+
+    initializeGraphs(); 
+
 }
 
 // Ensure the initialization function runs when the document is fully loaded

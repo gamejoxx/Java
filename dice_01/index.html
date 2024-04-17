@@ -5,96 +5,87 @@
     <title>Dice Simulation</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 <body>
     <div class="simulation-container">
         <div class="opponent" id="opponentA">
             <h2>Opponent A</h2>
-            <input type="number" id="diceCountA" placeholder="Number of dice">
-            <input type="number" id="diceFacesA" placeholder="Faces of dice">
-            <input type="number" id="modifierA" placeholder="Modifier">
+            <input type="number" id="diceCountA" placeholder="Number of dice" value="1">
+            <input type="number" id="diceFacesA" placeholder="Faces of dice" value="6">
+            <input type="number" id="modifierA" placeholder="Modifier" value="0">
         </div>
         <div class="opponent" id="opponentB">
             <h2>Opponent B</h2>
-            <input type="number" id="diceCountB" placeholder="Number of dice">
-            <input type="number" id="diceFacesB" placeholder="Faces of dice">
-            <input type="number" id="modifierB" placeholder="Modifier">
+            <input type="number" id="diceCountB" placeholder="Number of dice" value="1">
+            <input type="number" id="diceFacesB" placeholder="Faces of dice" value="6">
+            <input type="number" id="modifierB" placeholder="Modifier" value="0">
         </div>
         <div class="controls">
             <button id="startBtn">Start</button>
             <button id="stopBtn">Stop</button>
             <button id="resetBtn">Reset</button>
             <label for="speedControl">Speed:</label>
-            <input type="range" id="speedControl" min="1" max="10" value="5">
+            <input type="range" id="speedControl" min="1" max="100" value="100">
         </div>
         <div class="stats-container">
             <table id="resultsTable">
                 <thead>
-                    <table id="resultsTable">
-                        <thead>
-                            <tr>
-                                <th>Stat Name</th>
-                                <th>Player A</th>
-                                <th>Tie</th>
-                                <th>Player B</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Total Rolls</td>
-                                <td id="totalRollsA"></td>
-                                <td></td>
-                                <td id="totalRollsB"></td>
-                            </tr>
-                            <tr>
-                                <td>Last Roll</td>
-                                <td id="lastRollA"></td>
-                                <td id="lastRollTie"></td>
-                                <td id="lastRollB"></td>
-                            </tr>
-                            <tr>
-                                <td>Current Winner</td>
-                                <td id="currentWinA"></td>
-                                <td id="currentWinTie"></td>
-                                <td id="currentWinB"></td>
-                            </tr>
-                            <tr>
-                                <td>Total Wins</td>
-                                <td id="totalWinsA"></td>
-                                <td id="totalTies"></td>
-                                <td id="totalWinsB"></td>
-                            </tr>
-                            <tr>
-                                <td>Average Roll</td>
-                                <td id="averageRollA"></td>
-                                <td></td>
-                                <td id="averageRollB"></td>
-                            </tr>
-                            <tr>
-                                <td>Highest Roll</td>
-                                <td id="highestRollA"></td>
-                                <td></td>
-                                <td id="highestRollB"></td>
-                            </tr>
-                            <tr>
-                                <td>Lowest Roll</td>
-                                <td id="lowestRollA"></td>
-                                <td></td>
-                                <td id="lowestRollB"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    
+                    <tr>
+                        <th>Stat Details</th> <!-- Corrected placement -->
+                        <th>Opponent A</th>
+                        <th>Tie</th>
+                        <th>Opponent B</th>
+                    </tr>
                 </thead>
                 <tbody>
-                    <!-- Results will be populated here -->
+                    <tr>
+                        <th scope="row">Total Rolls</th> <!-- Row header -->
+                        <td id="totalRollsA">0</td>
+                        <td id="totalRollsTie">0</td>
+                        <td id="totalRollsB">0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Last Roll</th> <!-- Row header -->
+                        <td id="lastRollA">0</td>
+                        <td id="lastRollTie">0</td>
+                        <td id="lastRollB">0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Current Winner</th> <!-- Row header -->
+                        <td id="currentWinA">-</td>
+                        <td id="currentWinTie">-</td>
+                        <td id="currentWinB">-</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Total Wins</th> <!-- Row header -->
+                        <td id="totalWinsA">0</td>
+                        <td id="totalTies">0</td>
+                        <td id="totalWinsB">0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Average Roll</th> <!-- Row header -->
+                        <td id="averageRollA">0</td>
+                        <td>-</td>
+                        <td id="averageRollB">0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Highest Roll</th> <!-- Row header -->
+                        <td id="highestRollA">0</td>
+                        <td>-</td>
+                        <td id="highestRollB">0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Lowest Roll</th> <!-- Row header -->
+                        <td id="lowestRollA">0</td>
+                        <td>-</td>
+                        <td id="lowestRollB">0</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
         <div class="graphs-container">
-            <div id="graphA" class="graph">Graph A</div>
-            <div id="graphB" class="graph">Graph B</div>
+            <canvas id="graphA" class="graph">Graph A</canvas>
+            <canvas id="graphB" class="graph">Graph B</canvas>
         </div>
     </div>
     <script src="script.js"></script>
