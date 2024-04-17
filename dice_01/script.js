@@ -143,6 +143,50 @@ const updateWinTieStats = () => {
     document.getElementById('highestRollB').textContent = highestRollB;
     document.getElementById('lowestRollA').textContent = lowestRollA;
     document.getElementById('lowestRollB').textContent = lowestRollB;
+
+ // Update Current Winner based on the last roll
+ const winnerCellA = document.getElementById('currentWinA');
+ const winnerCellTie = document.getElementById('currentWinTie');
+ const winnerCellB = document.getElementById('currentWinB');
+
+ 
+
+ // Reset the background color for current winner
+ winnerCellA.style.backgroundColor = '';
+ winnerCellTie.style.backgroundColor = '';
+ winnerCellB.style.backgroundColor = '';
+
+ // Highlight the cell of the current winner based on the last roll
+ if (lastRollA > lastRollB) {
+   winnerCellA.style.backgroundColor = 'green';
+ } else if (lastRollB > lastRollA) {
+   winnerCellB.style.backgroundColor = 'green';
+ } else {
+   winnerCellTie.style.backgroundColor = 'yellow';
+ }
+ 
+ // Update Total Wins with percentage
+ const totalRolls = totalRollsA + totalRollsB; // Assuming total rolls for A and B are equal
+ const winPercentA = (totalRolls > 0) ? (totalWinsA / totalRolls * 100).toFixed(2) : 0;
+ const winPercentB = (totalRolls > 0) ? (totalWinsB / totalRolls * 100).toFixed(2) : 0;
+
+ // Set text content with percentage
+ document.getElementById('totalWinsA').textContent = `${totalWinsA} (${winPercentA}%)`;
+ document.getElementById('totalWinsB').textContent = `${totalWinsB} (${winPercentB}%)`;
+
+ // Highlight the cell with the highest percentage
+ if (winPercentA > winPercentB) {
+   document.getElementById('totalWinsA').style.backgroundColor = 'green';
+   document.getElementById('totalWinsB').style.backgroundColor = '';
+ } else if (winPercentB > winPercentA) {
+   document.getElementById('totalWinsA').style.backgroundColor = '';
+   document.getElementById('totalWinsB').style.backgroundColor = 'green';
+ } else {
+   // No highlight if the win percentage is equal
+   document.getElementById('totalWinsA').style.backgroundColor = '';
+   document.getElementById('totalWinsB').style.backgroundColor = '';
+ }
+
 };
 
 function initializeGraphs() {
@@ -219,9 +263,7 @@ function initializeGraphs() {
     chartB.data.datasets[0].data = Object.values(graphDataB.data);
     chartB.update();
   }
-  
-
-
+ 
 
 // Event listeners for input validation
 document.getElementById('diceCountA').addEventListener('input', validateInput);
