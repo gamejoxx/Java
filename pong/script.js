@@ -13,6 +13,7 @@ const paddleHeight = 100;
 const ballDiameter = 14;
 let upArrowPressed = false;
 let downArrowPressed = false;
+let gameInterval;
 
 // Net
 const net = {
@@ -153,13 +154,13 @@ function gameLoop() {
     render();
 }
 
-// Start the game
-const gameInterval = setInterval(gameLoop, 1000 / 60); // 60 FPS
 
-// Stop the game
+
 function stopGame() {
     clearInterval(gameInterval);
+    gameInterval = null; // Clear the interval ID
 }
+
 
 // Reset the game
 function resetGame() {
@@ -169,11 +170,13 @@ function resetGame() {
     render();
 }
 
-// Attach listeners to buttons
 document.getElementById('startButton').addEventListener('click', function() {
-    clearInterval(gameInterval);
-    gameInterval = setInterval(gameLoop, 1000 / 60);
+    // Only set a new interval if the game isn't already running
+    if (!gameInterval) {
+        gameInterval = setInterval(gameLoop, 1000 / 60); // 60 FPS
+    }
 });
+
 
 document.getElementById('stopButton').addEventListener('click', stopGame);
 
