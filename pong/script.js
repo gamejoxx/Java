@@ -15,6 +15,7 @@ let upArrowPressed = false;
 let downArrowPressed = false;
 let gameInterval;
 
+
 // Net
 const net = {
     x: (canvas.width - netWidth) / 2,
@@ -25,20 +26,23 @@ const net = {
 
 // Paddles
 const leftPaddle = {
-    x: 30,
+    x: 5,
     y: canvas.height / 2 - paddleHeight / 2,
     width: paddleWidth,
     height: paddleHeight,
-    dy: 0 // dy is the change in the y direction
+    // dy: parseFloat(leftPaddleSpeedSlider.value) // Add this line
 };
 
 const rightPaddle = {
-    x: canvas.width - paddleWidth - 30,
+    x: canvas.width - paddleWidth - 5,
     y: canvas.height / 2 - paddleHeight / 2,
     width: paddleWidth,
     height: paddleHeight,
-    dy: 0
+    // dy: parseFloat(rightPaddleSpeedSlider.value) // Add this line
 };
+
+
+
 
 // Ball
 const ball = {
@@ -85,10 +89,34 @@ function drawScore(x, y, score) {
     context.fillText(score.toString(), x, y);
 }
 
-// Move paddles
-function movePaddle(paddle, y) {
-    paddle.y = y - paddle.height / 2;
+// Simple AI to control the paddles
+function movePaddle(paddle, ball) {
+    // Calculate the center position of the paddle
+    let paddleCenter = paddle.y + paddle.height / 2;
+
+    // Move paddle towards the ball
+    if (ball.y < paddleCenter) {
+        paddle.dy = -Math.abs(paddle.dy);  // Move up
+    } else {
+        paddle.dy = Math.abs(paddle.dy);   // Move down
+    }
+
+    // Calculate potential new position
+    let newY = paddle.y + paddle.dy;
+
+    // Check for boundaries and adjust if necessary
+    if (newY < 0) {
+        newY = 0;
+    } else if (newY + paddle.height > canvas.height) {
+        newY = canvas.height - paddle.height;
+    }
+
+    // Update paddle position
+    paddle.y = newY;
 }
+
+
+
 
 // Collision detection
 function collisionDetect(paddle, ball) {
@@ -113,19 +141,19 @@ function update() {
     ball.y += ball.dy;
 
     // Simple AI to control the paddles
-    movePaddle(leftPaddle, ball.y);
-    movePaddle(rightPaddle, ball.y);
+    movePaddle(leftPaddle, ball);
+    movePaddle(rightPaddle, ball);
 
-    // Ball collision with top and bottom
+    // Check for ball collision with the canvas boundaries
     if (ball.y + ball.diameter / 2 >= canvas.height || ball.y - ball.diameter / 2 <= 0) {
         ball.dy = -ball.dy;
     }
 
-    // Ball collision with paddles
+    // Check for ball collision with paddles
     collisionDetect(leftPaddle, ball);
     collisionDetect(rightPaddle, ball);
 
-    // Scoring
+    // Check for scoring
     if (ball.x - ball.diameter / 2 <= 0) {
         rightScore++;
         resetBall();
@@ -134,6 +162,7 @@ function update() {
         resetBall();
     }
 }
+
 
 // Render the game
 function render() {
@@ -181,6 +210,44 @@ document.getElementById('startButton').addEventListener('click', function() {
 document.getElementById('stopButton').addEventListener('click', stopGame);
 
 document.getElementById('resetButton').addEventListener('click', resetGame);
+
+// Define variables without assigning DOM elements yet
+let leftPaddleSpeedSlider, ballSpeedSlider, rightPaddleSpeedSlider;
+
+// Wrap the references and event listeners setup in a DOMContentLoaded event to ensure DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Grab references to the sliders
+    leftPaddleSpeedSlider = document.getElementById('leftPaddleSpeed');
+    ballSpeedSlider = document.getElementById('ballSpeed');
+    rightPaddleSpeedSlider = document.getElementById('rightPaddleSpeed');
+
+    // Update paddle speed based on the slider
+    leftPaddleSpeedSlider.addEventListener('input', function() {
+        leftPaddle.dy = parseFloat(this.value);
+    });
+
+// Update ball speed based on the slider
+ballSpeedSlider.addEventListener('input', function() {
+    let magnitude = parseFloat(this.value);
+    let directionX = ball.dx / Math.abs(ball.dx); // Retain current direction
+    let directionY = ball.dy / Math.abs(ball.dy); // Retain current direction
+
+    ball.dx = directionX * magnitude; // Apply new magnitude while keeping direction
+    ball.dy = directionY * magnitude; // Apply new magnitude while keeping direction
+});
+
+
+    // Update right paddle speed based on the slider
+    rightPaddleSpeedSlider.addEventListener('input', function() {
+        rightPaddle.dy = parseFloat(this.value);
+    });
+
+    // Set initial paddle speeds based on the sliders
+    leftPaddle.dy = parseFloat(leftPaddleSpeedSlider.value);
+    rightPaddle.dy = parseFloat(rightPaddleSpeedSlider.value);
+});
+
+
 
 // Initial render call
 render();

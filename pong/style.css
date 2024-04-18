@@ -10,17 +10,17 @@ body {
 }
 
 #game-container {
-    width: 100%; /* Increased width */
-    height: 100%; /* Increased height */
-    margin-top: 0px; /* Added margin at the top */
+    width: 800px; /* Increased width */
+    height: 600px; /* Increased height */
+    margin-top: 30px; /* Added margin at the top */
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 canvas {
-    width: 90%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
     background-color: black;
     border: 4px solid green;
 }
