@@ -155,11 +155,40 @@ function update() {
 
     // Check for scoring
     if (ball.x - ball.diameter / 2 <= 0) {
+        beepSound();
         rightScore++;
         resetBall();
     } else if (ball.x + ball.diameter / 2 >= canvas.width) {
+        beepSound();
         leftScore++;
         resetBall();
+    }
+}
+
+// make a retro beep soud function using oscillator and pitch
+function beepSound() {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(300, audioCtx.currentTime); // value in hertz
+    oscillator.connect(audioCtx.destination);
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 0.1);
+}
+
+
+function collisionDetect(paddle, ball) {
+    if (ball.y + ball.diameter / 2 >= paddle.y && ball.y - ball.diameter / 2 <= paddle.y + paddle.height &&
+        ball.x + ball.diameter / 2 >= paddle.x && ball.x - ball.diameter / 2 <= paddle.x + paddle.width) {
+        ball.dx = -ball.dx; // reverse the ball direction
+        
+        // Trigger shake
+        document.body.classList.add('shake-animation');
+        
+        // Remove the class after animation ends (500ms)
+        setTimeout(() => {
+            document.body.classList.remove('shake-animation');
+        }, 500);
     }
 }
 
@@ -202,7 +231,7 @@ function resetGame() {
 document.getElementById('startButton').addEventListener('click', function() {
     // Only set a new interval if the game isn't already running
     if (!gameInterval) {
-        gameInterval = setInterval(gameLoop, 1000 / 60); // 60 FPS
+        gameInterval = setInterval(gameLoop, 1000 / 120); // 60 FPS
     }
 });
 
