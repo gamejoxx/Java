@@ -14,6 +14,8 @@ const ballDiameter = 14;
 let upArrowPressed = false;
 let downArrowPressed = false;
 let gameInterval;
+let ballPositions = [];
+
 
 
 // Net
@@ -76,11 +78,36 @@ function drawPaddle(x, y, width, height) {
     context.fillRect(x, y, width, height);
 }
 
-// Draw square ball
-function drawBall(x, y, diameter) {
-    context.fillStyle = 'green';
-    context.fillRect(x - diameter / 2, y - diameter / 2, diameter, diameter);
+// Draw square ball with a fading trail
+function drawBall() {
+    // Only add a new trail position if the ball has moved more than its diameter from the last trail position
+    if (ballPositions.length === 0 ||
+        Math.abs(ball.x - ballPositions[ballPositions.length - 1].x) >= ball.diameter ||
+        Math.abs(ball.y - ballPositions[ballPositions.length - 1].y) >= ball.diameter) {
+        
+        if (ballPositions.length === 0) {
+            // If it's the first position, start at full opacity
+            ballPositions.push({x: ball.x, y: ball.y, opacity: 1.0});
+        } else {
+            // Next positions start at 60% opacity
+            ballPositions.push({x: ball.x, y: ball.y, opacity: 0.4});
+        }
+    }
+
+    // Draw each position in the trail
+    ballPositions.forEach((pos, index) => {
+        context.fillStyle = `rgba(0, 255, 0, ${pos.opacity})`; // Green with fading opacity
+        context.fillRect(pos.x - ball.diameter / 2, pos.y - ball.diameter / 2, ball.diameter, ball.diameter);
+
+        // Reduce opacity for the next frame
+        pos.opacity -= 0.02; // Decrease this value to make the trail last longer
+    });
+
+    // Remove the faded positions
+    ballPositions = ballPositions.filter(pos => pos.opacity > 0);
 }
+
+
 
 // Draw score
 function drawScore(x, y, score) {
@@ -196,7 +223,9 @@ function collisionDetect(paddle, ball) {
 // Render the game
 function render() {
     // Clear the canvas
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = 'rgba(0, 0, 0, 0.2)'; // Change the alpha value to adjust the trail length
+    context.fillRect(0, 0, canvas.width, canvas.height);
+   //  context.clearRect(0, 0, canvas.width, canvas.height);
     // Draw the net, ball, paddles, and scores
     drawNet();
     drawBall(ball.x, ball.y, ball.diameter);
@@ -231,7 +260,7 @@ function resetGame() {
 document.getElementById('startButton').addEventListener('click', function() {
     // Only set a new interval if the game isn't already running
     if (!gameInterval) {
-        gameInterval = setInterval(gameLoop, 1000 / 120); // 60 FPS
+        gameInterval = setInterval(gameLoop, 1000 / 0); // 120 FPS
     }
 });
 
