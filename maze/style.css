@@ -1,0 +1,12 @@
+/* style.css */
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  canvas {
+    display: block;
+    background: #000; /* Assuming a dark background for the dungeon */
+  }
+  
