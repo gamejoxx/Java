@@ -21,14 +21,26 @@ document.addEventListener('DOMContentLoaded', function() {
     function drawGrid() {
         const squareWidth = canvas.width / numSquares;
         const squareHeight = canvas.height / numSquares;
-
+    
         for (let x = 0; x < numSquares; x++) {
             for (let y = 0; y < numSquares; y++) {
-                ctx.fillStyle = blendColors(x, y, numSquares, colors);
+                // Explicitly setting the corner colors
+                if (x === 0 && y === 0) {
+                    ctx.fillStyle = colors.topLeft; // Top-left corner
+                } else if (x === numSquares - 1 && y === 0) {
+                    ctx.fillStyle = colors.topRight; // Top-right corner
+                } else if (x === 0 && y === numSquares - 1) {
+                    ctx.fillStyle = colors.bottomLeft; // Bottom-left corner
+                } else if (x === numSquares - 1 && y === numSquares - 1) {
+                    ctx.fillStyle = colors.bottomRight; // Bottom-right corner
+                } else {
+                    ctx.fillStyle = blendColors(x, y, numSquares, colors);
+                }
                 ctx.fillRect(x * squareWidth, y * squareHeight, squareWidth, squareHeight);
             }
         }
     }
+    
 
     function blendColors(x, y, numSquares, colors) {
         const proportionX = x / numSquares;
@@ -70,6 +82,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.addEventListener('wheel', adjustGridSize);
     canvas.addEventListener('click', randomizeColors);
+
+    canvas.addEventListener('contextmenu', function(event) {
+        event.preventDefault(); // Prevent the default context menu from showing
+        numSquares = 3; // Reset the grid resolution to 3x3
+        drawGrid(); // Redraw the grid with the new resolution
+    });
+    
 
     drawGrid(); // Initial drawing
 });
