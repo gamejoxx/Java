@@ -11,7 +11,7 @@ function generateMap() {
   canvas.height = window.innerHeight;
 
   // Dungeon parameters
-  const roomCount = 15;
+  const roomCount = 4;
   const minSize = 5;
   const maxSize = 15;
   const mapWidth = 100;
@@ -48,4 +48,57 @@ function generateMap() {
       ctx.fillRect(roomA.x * 10, roomB.y * 10, (roomB.x - roomA.x) * 10, 10); // Horizontal
     }
   }
+
+  // script.js
+
+document.addEventListener('DOMContentLoaded', () => {
+    const randomWalkBtn = document.getElementById('randomWalk');
+    const bspBtn = document.getElementById('bsp');
+    const proceduralBtn = document.getElementById('procedural');
+  
+    randomWalkBtn.addEventListener('click', () => generateMap(drunkardsWalk));
+    bspBtn.addEventListener('click', () => generateMap(bspGeneration));
+    proceduralBtn.addEventListener('click', () => generateMap(proceduralGeneration));
+    
+    // Initialize with a procedural map
+    generateMap(proceduralGeneration);
+  });
+  
+  // Placeholder for the procedural generation function
+  function proceduralGeneration(ctx, mapWidth, mapHeight) {
+    // Your existing procedural generation code will go here
+  }
+  
+  // Placeholder for the drunkard's walk algorithm
+  function drunkardsWalk(ctx, mapWidth, mapHeight) {
+    // Implementation of the drunkard's walk algorithm
+  }
+  
+  // Placeholder for the binary space partitioning algorithm
+  function bspGeneration(ctx, mapWidth, mapHeight) {
+    // Implementation of the binary space partitioning algorithm
+  }
+  
+  function generateMap(generationMethod) {
+    const canvas = document.getElementById('dungeonCanvas');
+    const ctx = canvas.getContext('2d');
+  
+    // Set canvas size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+    // Dungeon parameters
+    const mapWidth = 100;
+    const mapHeight = 100;
+  
+    // Run the chosen generation method
+    generationMethod(ctx, mapWidth, mapHeight);
+  }
+  
+  
 }
+
+
