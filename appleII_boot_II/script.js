@@ -32,12 +32,12 @@ document.addEventListener('DOMContentLoaded', function() {
             terminal.textContent = symbols[index % symbols.length];
             index++;
         }, 100);
-        setTimeout(() => clearInterval(intervalId), 3000);
+        setTimeout(() => clearInterval(intervalId), 400);
     }
 
     function hexDump() {
-        const lines = 10;
-        const columns = 8;
+        const lines = 4;
+        const columns = 4;
         let dump = "";
         for (let i = 0; i < lines; i++) {
             for (let j = 0; j < columns; j++) {
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     function animateMessage(message) {
-        const interval = 200;
+        const interval = 20;
         let i = 0;
         const maxI = message.length;
         terminal.textContent = '';
@@ -71,31 +71,32 @@ document.addEventListener('DOMContentLoaded', function() {
             if (i >= maxI) {
                 clearInterval(intervalId);
                 terminal.textContent += '\n';
-                randomEvent();  // Trigger another event after message
+                // randomEvent();  // Trigger another event after message
             }
         }, interval);
     }
 
     function randomEvent() {
-        const events = [playBeep, flashScreen, hexDump, () => animateMessage(bootMessages[Math.floor(Math.random() * bootMessages.length)])];
+        const events = [playBeep, flashScreen, spinningSymbol, hexDump, () => animateMessage(bootMessages[Math.floor(Math.random() * bootMessages.length)])];
         const randomIndex = Math.floor(Math.random() * events.length);
         events[randomIndex]();
     }
 
     function hecticSequence() {
-        const numCycles = 100;
-        let cycleCount = 0;
+        const numCycles = 10;
+        let cycleCount = 1;
         const cycleInterval = setInterval(() => {
             // clearScreen();
             randomEvent();
             cycleCount++;
             if (cycleCount >= numCycles) {
                 clearInterval(cycleInterval);
+                // clearScreen();
                 terminal.textContent = '\nSYSTEM READY. ENJOY YOUR DAY!\n';
                 playBeep(440, 100);
                 appendCursor();
             }
-        }, 150);
+        }, 200);
     }
 
     function clearScreen() {
