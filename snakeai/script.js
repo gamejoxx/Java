@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let powerUp = null;
     let gameInterval = null;
     let score = 0; // Initialize score
+    let highScore = 0;
+
 
 
     function createGrid() {
@@ -80,11 +82,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
+    function updateHighScore() {
+        if (score > highScore) {
+            highScore = score;
+            const highScoreElement = document.getElementById('highScoreDisplay');
+            highScoreElement.textContent = `High Score: ${highScore}`;
+        }
+    }
+
     function showGameOver() {
         const gameOverElement = document.createElement('div');
         gameOverElement.id = 'gameOverMessage';
         gameOverElement.textContent = 'GAME OVER';
         document.body.appendChild(gameOverElement);
+        setTimeout(() => { gameOverElement.remove(); }, 500); // Remove the message after 0.5 seconds
     }
     
     function simpleAIDirection() {
@@ -199,6 +210,11 @@ document.addEventListener('DOMContentLoaded', function () {
         direction = bestDirection;
     }
     
+    function startGame() {
+        resetGame();
+        gameInterval = setInterval(gameLoop, 50); // Adjust the interval as needed for your game speed
+    }
+
     function gameLoop() {
         // improvedAIDirection(); // Set direction towards the power-up using improved AI logic
         // improvedAIDirectiongemini(); // Set direction towards the power-up using improved AI logic
@@ -209,14 +225,16 @@ document.addEventListener('DOMContentLoaded', function () {
         if (newHead.x <= 0 || newHead.x >= cols - 1 || newHead.y <= 0 || newHead.y >= rows - 1 || isSnake(newHead.x, newHead.y)) {
             // alert('Game Over!');
             showGameOver();
+            updateHighScore();
             clearInterval(gameInterval);
+            setTimeout(startGame, 1000); // Restart game after x seconds
             return;
         }
     
         snake.unshift(newHead);
         if (newHead.x === powerUp.x && newHead.y === powerUp.y) {
             score++; // Increment score
-            playBeep(); // Play beep sound
+            // playBeep(); // Play beep sound
             updateScore(); // Update score display
             clearPowerUp(); // Remove power-up
             placePowerUp(); // New power-up location
@@ -264,12 +282,8 @@ document.addEventListener('DOMContentLoaded', function () {
    // document.addEventListener('keydown', changeDirection);
     
 
-    startButton.addEventListener('click', function () {
-        if (!gameInterval) {
-           // direction = { x: 1, y: 0 }; // Set initial direction to right
-            gameInterval = setInterval(gameLoop, 5);
-        }
-    });
+   startButton.addEventListener('click', startGame);
+
 
     stopButton.addEventListener('click', function () {
         if (gameInterval) {
@@ -282,15 +296,20 @@ document.addEventListener('DOMContentLoaded', function () {
         clearInterval(gameInterval);
         gameInterval = null;
         snake = [{ x: 16, y: 12 }];
-        direction = { x: 0, y: 0 };
+        direction = { x: 1, y: 0 }; // The AI will determine the direction, but set a default to start moving
         score = 0;
+        updateScore();
         const gameOverElement = document.getElementById('gameOverMessage');
         if (gameOverElement) {
             gameOverElement.remove();
         }
-        init();
+        createGrid();
+        drawSnake();
+        placePowerUp();
     }
     
+
+    // resetButton.addEventListener('click', startGame);
 
     resetButton.addEventListener('click', function () {
         clearInterval(gameInterval);

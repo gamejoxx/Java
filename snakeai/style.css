@@ -80,13 +80,6 @@ button:hover {
     background-color: rgb(0, 51, 0);  /* or any color you prefer for the border */
 }
 
-#scoreDisplay {
-    color: lime;
-    font-size: 32px; /* Adjust the size as needed */
-    text-align: center;
-    margin: 20px 0;
-}
-
 #gameOverMessage {
     color: red;
     font-size: 48px; /* Adjust the size as needed */
@@ -98,6 +91,26 @@ button:hover {
     transform: translateY(-50%);
     z-index: 10; /* Ensure it's above other elements */
 }
+
+#scoreContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px; /* Space between score and high score */
+}
+
+#scoreDisplay, #highScoreDisplay {
+    color: lime;
+    font-size: 24px; /* Adjust the size as needed */
+    text-align: center;
+    margin: 10px 0;
+}
+
+/* If you want to ensure both score and high score always take up the same amount of space */
+#scoreDisplay, #highScoreDisplay {
+    min-width: 160px;
+}
+
 
 
 @keyframes flicker {
