@@ -1,55 +1,35 @@
-let angles = [90, 60, 45];  // Basic symmetry angles
-let symmetry = 6;           // Initial symmetry level
-let color1, color2;
-let alphaValue = 150;       // Transparency for trace effects
+// Function to create a layer with specified size, delay, duration, and index
+function createLayer(size, delay, duration, index) {
+    const layer = document.createElement('div'); // Create a new div element
+    layer.classList.add('layer'); // Add the 'layer' class to the div
+    layer.style.width = `${size}vmax`; // Set the width of the div
+    layer.style.height = `${size}vmax`; // Set the height of the div
+    layer.style.animation = `rotate ${duration}s linear ${delay}s infinite`; // Set the animation properties of the div
+    layer.style.clipPath = `polygon(${50 - index * 5}% ${50 - index * 5}%, ${50 + index * 5}% ${50 - index * 5}%, ${50 + index * 5}% ${50 + index * 5}%, ${50 - index * 5}% ${50 + index * 5}%)`; // Set the clip path of the div
 
-function setup() {
-    createCanvas(windowWidth, windowHeight);
-    angleMode(DEGREES);
-    color1 = color(255, 204, 0);  // Bright yellow
-    color2 = color(65, 105, 225); // Royal blue
-    background(18);  // Dark background
+    document.getElementById('kaleidoscope').appendChild(layer); // Append the layer to the 'kaleidoscope' element
 }
 
-function draw() {
-    // Adding a semi-transparent background for a trace effect
-    fill(18, 18, 18, alphaValue);
-    noStroke();
-    rect(0, 0, width, height);
-
-    translate(width / 2, height / 2);
-
-    // Draw multiple rotated versions of the pattern
-    for (let i = 0; i < symmetry; i++) {
-        rotate(360 / symmetry);
-        drawPattern();
+// Function to initialize the kaleidoscope
+function initializeKaleidoscope() {
+    for (let i = 0; i < 20; i++) {
+        createLayer(9 + i * 5, i * 0.1, 30 + i * (i % 2 === 0 ? -1 : 1), i); // Create layers with increasing size, delay, duration, and index
     }
 }
 
-// Function to draw the repeating pattern
-function drawPattern() {
-    let numShapes = random(5, 15); // More randomness in the number of shapes
-    let angle = random(angles);    // Pick a random angle for variety
-    stroke(lerpColor(color1, color2, random()));
-    fill(lerpColor(color2, color1, random()));
-    strokeWeight(random(1, 4));    // Random stroke weight for more variability
+// Event listener for when the DOM content is loaded
+document.addEventListener('DOMContentLoaded', initializeKaleidoscope);
 
-    for (let i = 0; i < numShapes; i++) {
-        push();
-        rotate(i * angle);
-        let size = random(50, 150);
-        ellipse(size, 0, random(10, 60), random(20, 80)); // More random sizes
-        pop();
-    }
-}
-
-function mouseMoved() {
-    // Adjust symmetry more smoothly and add a dampening effect
-    let newSymmetry = int(map(mouseX, 0, width, 3, 12));
-    symmetry += (newSymmetry - symmetry) * 0.05; // Smooth transition
-    loop();
-}
-
-function mouseReleased() {
-    noLoop(); // Stop the animation when the mouse is released
-}
+// Event listener for mouse movement
+document.addEventListener('mousemove', function(e) {
+    const layers = document.querySelectorAll('.layer'); // Get all elements with the 'layer' class
+    const speedFactor = 1.5; // Set the speed factor
+    const x = (e.clientX / window.innerWidth - 0.5) * speedFactor; // Calculate the x position based on mouse movement
+    const y = (e.clientY / window.innerHeight - 0.5) * speedFactor; // Calculate the y position based on mouse movement
+    
+    layers.forEach((layer, index) => {
+        const baseSpeed = index % 2 === 0 ? 1 : -1; // Determine the base speed based on the index
+        const adjustedDuration = 1 + baseSpeed * index * (x - y); // Calculate the adjusted duration based on the x and y positions
+        layer.style.animationDuration = `${Math.abs(adjustedDuration)}s`; // Set the animation duration of the layer
+    });
+});
