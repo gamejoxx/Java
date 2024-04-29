@@ -107,8 +107,101 @@ document.addEventListener('DOMContentLoaded', function () {
         // Additional logic to handle wall and self-collision avoidance can go here
     }
 
+    function improvedAIDirection() {
+        // Potential directions the snake can move
+        const directions = [
+            { x: 1, y: 0 },  // Right
+            { x: -1, y: 0 }, // Left
+            { x: 0, y: 1 },  // Down
+            { x: 0, y: -1 }  // Up
+        ];
+    
+        // Filter out directions that would cause a collision
+        const safeDirections = directions.filter(dir => {
+            const newX = snake[0].x + dir.x;
+            const newY = snake[0].y + dir.y;
+    
+            // Check for wall collision
+            if (newX < 0 || newY < 0 || newX >= gameWidth || newY >= gameHeight) {
+                return false;
+            }
+    
+            // Check for self collision
+            for (let i = 0; i < snake.length; i++) {
+                if (snake[i].x === newX && snake[i].y === newY) {
+                    return false;
+                }
+            }
+    
+            return true;
+        });
+    
+        // Choose the direction that gets the snake closest to the power-up
+        let bestDirection = safeDirections[0];
+        let bestDistance = Math.hypot(powerUp.x - (snake[0].x + bestDirection.x), powerUp.y - (snake[0].y + bestDirection.y));
+    
+        for (let i = 1; i < safeDirections.length; i++) {
+            const dir = safeDirections[i];
+            const distance = Math.hypot(powerUp.x - (snake[0].x + dir.x), powerUp.y - (snake[0].y + dir.y));
+    
+            if (distance < bestDistance) {
+                bestDirection = dir;
+                bestDistance = distance;
+            }
+        }
+    
+        direction = bestDirection;
+    }
 
+    function improvedAIDirectiongemini() {
+        // Potential directions the snake can move
+        const directions = [
+            { x: 1, y: 0 },  // Right
+            { x: -1, y: 0 }, // Left
+            { x: 0, y: 1 },  // Down
+            { x: 0, y: -1 }  // Up
+        ];
+    
+        // Filter out directions that would cause a collision
+        const safeDirections = directions.filter(dir => {
+            const newX = snake[0].x + dir.x;
+            const newY = snake[0].y + dir.y;
+    
+            // Check for wall collision
+            if (newX < 0 || newY < 0 || newX >= gameWidth || newY >= gameHeight) {
+                return false;
+            }
+    
+            // Check for self collision
+            for (let i = 0; i < snake.length; i++) {
+                if (snake[i].x === newX && snake[i].y === newY) {
+                    return false;
+                }
+            }
+    
+            return true;
+        });
+    
+        // Choose the direction that gets the snake closest to the power-up
+        let bestDirection = safeDirections[0];
+        let bestDistance = Math.hypot(powerUp.x - (snake[0].x + bestDirection.x), powerUp.y - (snake[0].y + bestDirection.y));
+    
+        for (let i = 1; i < safeDirections.length; i++) {
+            const dir = safeDirections[i];
+            const distance = Math.hypot(powerUp.x - (snake[0].x + dir.x), powerUp.y - (snake[0].y + dir.y));
+    
+            if (distance < bestDistance) {
+                bestDirection = dir;
+                bestDistance = distance;
+            }
+        }
+    
+        direction = bestDirection;
+    }
+    
     function gameLoop() {
+        // improvedAIDirection(); // Set direction towards the power-up using improved AI logic
+        // improvedAIDirectiongemini(); // Set direction towards the power-up using improved AI logic
         simpleAIDirection();  // Set direction towards the power-up using simple AI logic
         const newHead = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
     
@@ -174,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
     startButton.addEventListener('click', function () {
         if (!gameInterval) {
            // direction = { x: 1, y: 0 }; // Set initial direction to right
-            gameInterval = setInterval(gameLoop, 200);
+            gameInterval = setInterval(gameLoop, 5);
         }
     });
 
