@@ -12,12 +12,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function createGrid() {
         gameArea.innerHTML = '';
-        for (let i = 0; i < rows * cols; i++) {
-            const cell = document.createElement('div');
-            cell.classList.add('gameCell');
-            gameArea.appendChild(cell);
+        for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+                const cell = document.createElement('div');
+                if (y === 0 || y === rows - 1 || x === 0 || x === cols - 1) {
+                    cell.classList.add('borderCell');
+                } else {
+                    cell.classList.add('gameCell');
+                }
+                gameArea.appendChild(cell);
+            }
         }
     }
+    
 
     function drawSnake() {
         gameArea.querySelectorAll('.snake').forEach(cell => cell.classList.remove('snake'));
@@ -30,14 +37,21 @@ document.addEventListener('DOMContentLoaded', function () {
     function placePowerUp() {
         do {
             powerUp = {
-                x: Math.floor(Math.random() * cols),
-                y: Math.floor(Math.random() * rows)
+                x: Math.floor(Math.random() * (cols - 2)) + 1,
+                y: Math.floor(Math.random() * (rows - 2)) + 1
             };
         } while (isSnake(powerUp.x, powerUp.y));
-
+    
         const index = powerUp.y * cols + powerUp.x;
         gameArea.children[index].classList.add('powerUp');
     }
+    
+    function clearPowerUp() {
+        const index = powerUp.y * cols + powerUp.x;
+        gameArea.children[index].classList.remove('powerUp');
+        powerUp = null; // Reset the powerUp variable
+    }
+    
 
     function isSnake(x, y) {
         return snake.some(segment => segment.x === x && segment.y === y);
@@ -45,15 +59,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function gameLoop() {
         const newHead = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
-
-        if (newHead.x < 0 || newHead.x >= cols || newHead.y < 0 || newHead.y >= rows || isSnake(newHead.x, newHead.y)) {
+    
+        // Check for game over conditions with border collision
+        if (newHead.x <= 0 || newHead.x >= cols - 1 || newHead.y <= 0 || newHead.y >= rows - 1 || isSnake(newHead.x, newHead.y)) {
             alert('Game Over!');
             clearInterval(gameInterval);
             return;
         }
-
+    
         snake.unshift(newHead);
         if (newHead.x === powerUp.x && newHead.y === powerUp.y) {
+            clearPowerUp(); // Remove power-up
             placePowerUp(); // New power-up location
         } else {
             const tail = snake.pop();
@@ -61,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         drawSnake();
     }
+    
 
     function init() {
         createGrid();

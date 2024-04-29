@@ -72,3 +72,7 @@ button:hover {
 .powerUp {
     background-color: red; /* Power-ups are red */
 }
+
+.borderCell {
+    background-color: grey;  /* or any color you prefer for the border */
+}
