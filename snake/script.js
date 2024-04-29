@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let direction = { x: 0, y: 0 };
     let powerUp = null;
     let gameInterval = null;
+    let score = 0; // Initialize score
+
 
     function createGrid() {
         gameArea.innerHTML = '';
@@ -52,23 +54,56 @@ document.addEventListener('DOMContentLoaded', function () {
         powerUp = null; // Reset the powerUp variable
     }
     
-
+    function updateScore() {
+        const scoreElement = document.getElementById('scoreDisplay');
+        scoreElement.textContent = `Score: ${score}`;
+    }
+    
     function isSnake(x, y) {
         return snake.some(segment => segment.x === x && segment.y === y);
     }
+    
+    function playBeep() {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain(); // Create a gain node
+        oscillator.type = 'square';
+        oscillator.frequency.setValueAtTime(640, audioCtx.currentTime);
+        oscillator.connect(gainNode); // Connect oscillator to gain node
+        gainNode.connect(audioCtx.destination); // Connect gain node to audio destination
+        gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime); // Set the volume to 0.2 (20%)
+        oscillator.start();
+        setTimeout(() => {
+            oscillator.stop();
+            gainNode.disconnect(); // Disconnect gain node after stopping oscillator
+        }, 50);
+    }
+
+
+    function showGameOver() {
+        const gameOverElement = document.createElement('div');
+        gameOverElement.id = 'gameOverMessage';
+        gameOverElement.textContent = 'GAME OVER';
+        document.body.appendChild(gameOverElement);
+    }
+    
 
     function gameLoop() {
         const newHead = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
     
         // Check for game over conditions with border collision
         if (newHead.x <= 0 || newHead.x >= cols - 1 || newHead.y <= 0 || newHead.y >= rows - 1 || isSnake(newHead.x, newHead.y)) {
-            alert('Game Over!');
+            // alert('Game Over!');
+            showGameOver();
             clearInterval(gameInterval);
             return;
         }
     
         snake.unshift(newHead);
         if (newHead.x === powerUp.x && newHead.y === powerUp.y) {
+            score++; // Increment score
+            playBeep(); // Play beep sound
+            updateScore(); // Update score display
             clearPowerUp(); // Remove power-up
             placePowerUp(); // New power-up location
         } else {
@@ -83,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
         createGrid();
         drawSnake();
         placePowerUp();
+        updateScore();
     }
 
     function changeDirection(event) {
@@ -128,11 +164,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    function resetGame() {
+        clearInterval(gameInterval);
+        gameInterval = null;
+        snake = [{ x: 16, y: 12 }];
+        direction = { x: 0, y: 0 };
+        score = 0;
+        const gameOverElement = document.getElementById('gameOverMessage');
+        if (gameOverElement) {
+            gameOverElement.remove();
+        }
+        init();
+    }
+    
+
     resetButton.addEventListener('click', function () {
         clearInterval(gameInterval);
         gameInterval = null;
         snake = [{ x: 16, y: 12 }];
         direction = { x: 0, y: 0 };
+        resetGame();
         init();
     });
 
