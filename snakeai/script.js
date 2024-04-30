@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     
-
     function drawSnake() {
         gameArea.querySelectorAll('.snake').forEach(cell => cell.classList.remove('snake'));
         snake.forEach(segment => {
@@ -81,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 50);
     }
 
-
     function updateHighScore() {
         if (score > highScore) {
             highScore = score;
@@ -95,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
         gameOverElement.id = 'gameOverMessage';
         gameOverElement.textContent = 'GAME OVER';
         document.body.appendChild(gameOverElement);
-        setTimeout(() => { gameOverElement.remove(); }, 500); // Remove the message after 0.5 seconds
+        setTimeout(() => { gameOverElement.remove(); }, 650); // Remove the message after 0.5 seconds
     }
     
     function simpleAIDirection() {
@@ -118,107 +116,49 @@ document.addEventListener('DOMContentLoaded', function () {
         // Additional logic to handle wall and self-collision avoidance can go here
     }
 
-    function improvedAIDirection() {
-        // Potential directions the snake can move
-        const directions = [
-            { x: 1, y: 0 },  // Right
+    function midAIDirectionalpha() {
+        let moveOptions = [
+            { x: 1, y: 0 }, // Right
             { x: -1, y: 0 }, // Left
-            { x: 0, y: 1 },  // Down
-            { x: 0, y: -1 }  // Up
+            { x: 0, y: 1 }, // Down
+            { x: 0, y: -1 } // Up
         ];
     
-        // Filter out directions that would cause a collision
-        const safeDirections = directions.filter(dir => {
-            const newX = snake[0].x + dir.x;
-            const newY = snake[0].y + dir.y;
-    
-            // Check for wall collision
-            if (newX < 0 || newY < 0 || newX >= gameWidth || newY >= gameHeight) {
-                return false;
-            }
-    
-            // Check for self collision
-            for (let i = 0; i < snake.length; i++) {
-                if (snake[i].x === newX && snake[i].y === newY) {
-                    return false;
-                }
-            }
-    
-            return true;
+        // Filter out moves that would hit the snake itself or the walls
+        moveOptions = moveOptions.filter(move => {
+            const newX = snake[0].x + move.x;
+            const newY = snake[0].y + move.y;
+            const hitsWall = newX <= 0 || newX >= cols - 1 || newY <= 0 || newY >= rows - 1;
+            const hitsSelf = isSnake(newX, newY);
+            return !hitsWall && !hitsSelf;
         });
     
-        // Choose the direction that gets the snake closest to the power-up
-        let bestDirection = safeDirections[0];
-        let bestDistance = Math.hypot(powerUp.x - (snake[0].x + bestDirection.x), powerUp.y - (snake[0].y + bestDirection.y));
+        // Prefer moves that bring the snake closer to the power-up
+        moveOptions.sort((a, b) => {
+            const distA = Math.abs(powerUp.x - (snake[0].x + a.x)) + Math.abs(powerUp.y - (snake[0].y + a.y));
+            const distB = Math.abs(powerUp.x - (snake[0].x + b.x)) + Math.abs(powerUp.y - (snake[0].y + b.y));
+            return distA - distB;
+        });
     
-        for (let i = 1; i < safeDirections.length; i++) {
-            const dir = safeDirections[i];
-            const distance = Math.hypot(powerUp.x - (snake[0].x + dir.x), powerUp.y - (snake[0].y + dir.y));
-    
-            if (distance < bestDistance) {
-                bestDirection = dir;
-                bestDistance = distance;
-            }
+        // Set the direction to the first move option (the one that gets closest to the power-up)
+        if (moveOptions.length > 0) {
+            direction = moveOptions[0];
+        } else {
+            // If there are no valid move options, the game is essentially over (or the AI is trapped).
+            // For now, we can simply keep the direction unchanged.
+            // Future improvements might include a more complex strategy to escape traps.
         }
-    
-        direction = bestDirection;
     }
+    
 
-    function improvedAIDirectiongemini() {
-        // Potential directions the snake can move
-        const directions = [
-            { x: 1, y: 0 },  // Right
-            { x: -1, y: 0 }, // Left
-            { x: 0, y: 1 },  // Down
-            { x: 0, y: -1 }  // Up
-        ];
-    
-        // Filter out directions that would cause a collision
-        const safeDirections = directions.filter(dir => {
-            const newX = snake[0].x + dir.x;
-            const newY = snake[0].y + dir.y;
-    
-            // Check for wall collision
-            if (newX < 0 || newY < 0 || newX >= gameWidth || newY >= gameHeight) {
-                return false;
-            }
-    
-            // Check for self collision
-            for (let i = 0; i < snake.length; i++) {
-                if (snake[i].x === newX && snake[i].y === newY) {
-                    return false;
-                }
-            }
-    
-            return true;
-        });
-    
-        // Choose the direction that gets the snake closest to the power-up
-        let bestDirection = safeDirections[0];
-        let bestDistance = Math.hypot(powerUp.x - (snake[0].x + bestDirection.x), powerUp.y - (snake[0].y + bestDirection.y));
-    
-        for (let i = 1; i < safeDirections.length; i++) {
-            const dir = safeDirections[i];
-            const distance = Math.hypot(powerUp.x - (snake[0].x + dir.x), powerUp.y - (snake[0].y + dir.y));
-    
-            if (distance < bestDistance) {
-                bestDirection = dir;
-                bestDistance = distance;
-            }
-        }
-    
-        direction = bestDirection;
-    }
-    
     function startGame() {
         resetGame();
-        gameInterval = setInterval(gameLoop, 50); // Adjust the interval as needed for your game speed
+        gameInterval = setInterval(gameLoop, 10); // Adjust the interval as needed for your game speed
     }
 
     function gameLoop() {
-        // improvedAIDirection(); // Set direction towards the power-up using improved AI logic
-        // improvedAIDirectiongemini(); // Set direction towards the power-up using improved AI logic
-        simpleAIDirection();  // Set direction towards the power-up using simple AI logic
+        midAIDirectionalpha(); // Set direction towards the power-up using mid-level AI logic
+        // simpleAIDirection();  // Set direction towards the power-up using simple AI logic
         const newHead = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
     
         // Check for game over conditions with border collision
@@ -296,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function () {
         clearInterval(gameInterval);
         gameInterval = null;
         snake = [{ x: 16, y: 12 }];
-        direction = { x: 1, y: 0 }; // The AI will determine the direction, but set a default to start moving
+        // direction = { x: 1, y: 0 }; // The AI will determine the direction, but set a default to start moving
         score = 0;
         updateScore();
         const gameOverElement = document.getElementById('gameOverMessage');
