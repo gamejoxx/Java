@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'PrintChar21';
-    src: url('fonts/PrintChar21.ttf') format('truetype');
+    src: url('fonts/pr/PrintChar21.ttf') format('truetype');
 }
 
 body, html {
@@ -11,5 +11,6 @@ body, html {
     font-size: 10px;
     color: lime;
     font-family: 'PrintChar21', monospace;
+    z-index: 1;
     overflow: hidden;
 }
