@@ -1,51 +1,47 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const container = document.getElementById('ascii-container');
+document.addEventListener('DOMContentLoaded', function() {
+    const gridContainer = document.getElementById('grid-container');
+    const numRows = Math.floor(window.innerHeight / 20);
+    const numCols = Math.floor(window.innerWidth / 20);
 
-    document.addEventListener('click', function (e) {
-        const x = e.clientX;
-        const y = e.clientY;
-        createWave(x, y);
+    // Populate grid with cells
+    for (let i = 0; i < numRows * numCols; i++) {
+        const cell = document.createElement('div');
+        cell.style.width = '20px';
+        cell.style.height = '20px';
+        gridContainer.appendChild(cell);
+    }
+
+    gridContainer.addEventListener('click', function(e) {
+        const x = Math.floor(e.clientX / 20);
+        const y = Math.floor(e.clientY / 20);
+        const index = y * numCols + x;
+        rippleEffect(index, 0);
     });
 
-    function createWave(x, y) {
-        const maxChars = 100; // Maximum number of characters in a wave
-        const speed = 100; // Speed of wave spread in milliseconds
-        const fadeStart = 500; // Time in milliseconds after which characters start to fade
+    function rippleEffect(index, stage) {
+        if (stage > 5) return; // Stop the ripple after 5 stages
+        setTimeout(() => {
+            const currentCell = gridContainer.children[index];
+            if (currentCell && !currentCell.textContent) {
+                currentCell.textContent = getRandomChar();
+            }
+            const nextIndices = [
+                index - 1, index + 1, // left and right
+                index - numCols, index + numCols, // top and bottom
+                index - numCols - 1, index - numCols + 1, // top-left and top-right
+                index + numCols - 1, index + numCols + 1 // bottom-left and bottom-right
+            ];
 
-        for (let i = 0; i < maxChars; i++) {
-            setTimeout(() => {
-                const charElement = document.createElement('span');
-                charElement.textContent = getRandomChar();
-                charElement.style.position = 'absolute';
-                charElement.style.left = `${x}px`;
-                charElement.style.top = `${y}px`;
-                charElement.style.opacity = 1;
-                container.appendChild(charElement);
-
-                // Animation for moving
-                const angle = Math.random() * 2 * Math.PI;
-                const distance = Math.random() * 150; // Random distance for spread
-                const targetX = x + distance * Math.cos(angle);
-                const targetY = y + distance * Math.sin(angle);
-
-                const moveDuration = 2000; // Duration in milliseconds for the move
-                charElement.animate([
-                    { transform: `translate(0, 0)`, opacity: 1 },
-                    { transform: `translate(${targetX - x}px, ${targetY - y}px)`, opacity: 0 }
-                ], {
-                    duration: moveDuration,
-                    easing: 'ease-out'
-                });
-
-                setTimeout(() => {
-                    charElement.remove(); // Clean up the element after animation
-                }, moveDuration);
-            }, i * speed);
-        }
+            nextIndices.forEach(i => {
+                if (i >= 0 && i < gridContainer.children.length) {
+                    rippleEffect(i, stage + 1);
+                }
+            });
+        }, 100 * stage); // Delay increases with each stage
     }
 
     function getRandomChar() {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        return chars.charAt(Math.floor(Math.random() * chars.length));
+        return chars[Math.floor(Math.random() * chars.length)];
     }
 });
