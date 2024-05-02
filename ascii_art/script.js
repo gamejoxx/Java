@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Populate grid with cells
     for (let i = 0; i < numRows * numCols; i++) {
         const cell = document.createElement('div');
-        cell.style.width = '20px';
-        cell.style.height = '20px';
+        cell.style.width = '10px';
+        cell.style.height = '10px';
         gridContainer.appendChild(cell);
     }
 
@@ -19,17 +19,25 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function rippleEffect(index, stage) {
-        if (stage > 5) return; // Stop the ripple after 5 stages
+        if (stage > Math.floor(Math.random() * 6) + 1) return; // Reduce ripple range to manage performance
         setTimeout(() => {
             const currentCell = gridContainer.children[index];
-            if (currentCell && !currentCell.textContent) {
+            if (currentCell && !currentCell.textContent) { // Only update empty cells
                 currentCell.textContent = getRandomChar();
+
+                // Set a "lifetime" for the character to clear it efficiently
+                setTimeout(() => {
+                    if (currentCell) { // Ensure the cell exists when attempting to clear
+                        currentCell.textContent = '';
+                    }
+                }, 400); // Short lifetime for each character
             }
+            // Define neighbors indices for the ripple effect
             const nextIndices = [
-                index - 1, index + 1, // left and right
-                index - numCols, index + numCols, // top and bottom
-                index - numCols - 1, index - numCols + 1, // top-left and top-right
-                index + numCols - 1, index + numCols + 1 // bottom-left and bottom-right
+                index - Math.floor(Math.random() * 2) + 1, index + Math.floor(Math.random() * 2) + 1, // left and right
+                index - numCols + Math.floor(Math.random() * 2) + 1, index + numCols + Math.floor(Math.random() * 2) + 1, // top and bottom
+                index - numCols - Math.floor(Math.random() * 2) + 1, index - numCols + Math.floor(Math.random() * 2) + 1, // top-left and top-right
+                index + numCols - Math.floor(Math.random() * 2) + 1, index + numCols + Math.floor(Math.random() * 2) + 1 // bottom-left and bottom-right
             ];
 
             nextIndices.forEach(i => {
@@ -37,11 +45,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     rippleEffect(i, stage + 1);
                 }
             });
-        }, 100 * stage); // Delay increases with each stage
+        }, 25 * stage); // Maintain fast ripple speed
     }
 
     function getRandomChar() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const chars = 'ABCDEFGHIJKLMNO345968702-=-?_PQRSTUVWXYZ%#^$%^#%@$^*&(*($&*#^&@$%^#$%';
         return chars[Math.floor(Math.random() * chars.length)];
     }
 });
