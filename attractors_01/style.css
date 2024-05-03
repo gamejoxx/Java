@@ -2,8 +2,9 @@ body, html {
     height: 100%;
     margin: 0;
     background: black;
-    color: white;
+    color: rgb(255, 255, 255);
     font-family: Arial, sans-serif;
+    overflow: hidden;
 }
 
 .control-panel {
@@ -54,6 +55,7 @@ label {
 canvas {
     display: block;
     width: 100%;
-    height: calc(100% - 130px); /* Adjusted based on the reduced size of controls */
-    background: black;
+    height: calc(100% - 100px); /* Adjusted based on the reduced size of controls */
+    background: rgb(41, 48, 53);
+    color-interpolation-filters: ;
 }
