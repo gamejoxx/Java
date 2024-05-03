@@ -1,0 +1,61 @@
+@font-face {
+    font-family: 'PrintChar21';
+    src: url('fonts/PrintChar21.ttf') format('truetype');
+}
+
+body {
+    font-family: 'PrintChar21', monospace;
+    background-color: #000;
+    color: #0f0;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: top;
+    margin: 0;
+    padding: 20px;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.control-panel {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #333;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-family: 'PrintChar21', monospace;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+.timer-container {
+    position: relative;
+    width: 90%;
+    height: 90%;
+    display: grid;
+    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns: repeat(30, 1fr);
+    gap: 5px;
+}
+
+.timer {
+    color: #0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+}
+
+.timer.red {
+    color: red;
+}

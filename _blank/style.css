@@ -9,7 +9,7 @@ body, html {
     padding: 0;
     background-color: black;
     font-size: 10px;
-    color: lime;
+    color: rgb(0, 158, 0);
     font-family: 'PrintChar21', monospace;
     overflow: hidden;
 }
