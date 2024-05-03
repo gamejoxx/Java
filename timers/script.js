@@ -4,30 +4,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetBtn = document.getElementById('resetBtn');
     const timerContainer = document.getElementById('timerContainer');
     let intervalId;
+    let creatingTimers = false;
 
     startBtn.addEventListener('click', () => {
-        if (!intervalId) {
-            intervalId = setInterval(createRandomTimer, 200); // Adjust interval as needed
+        if (!creatingTimers) {
+            creatingTimers = true;
+            createTimersInBatches();
         }
     });
 
     stopBtn.addEventListener('click', () => {
         clearInterval(intervalId);
-        intervalId = null;
+        creatingTimers = false;
     });
 
     resetBtn.addEventListener('click', () => {
         clearInterval(intervalId);
-        intervalId = null;
+        creatingTimers = false;
         timerContainer.innerHTML = '';
     });
+
+    function createTimersInBatches() {
+        const numberOfTimers = Math.floor(Math.random() * (100 - 30) + 30);
+        let timersCreated = 0;
+
+        intervalId = setInterval(() => {
+            createRandomTimer();
+            timersCreated++;
+            if (timersCreated >= numberOfTimers) {
+                clearInterval(intervalId);
+                setTimeout(() => {
+                    if (creatingTimers) createTimersInBatches();
+                }, Math.random() * (4000 - 2000) + 2000);
+            }
+        }, 10);
+    }
 
     function createRandomTimer() {
         const timerElement = document.createElement('div');
         timerElement.classList.add('timer');
         timerContainer.appendChild(timerElement);
 
-        let countdown = Math.random() * (15000 - 4000) + 4000;
+        let countdown = Math.random() * (65000 - 4000) + 4000;
         timerElement.textContent = formatTime(countdown);
 
         const timeoutId = setInterval(() => {
@@ -44,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     timerElement.classList.add('red');
                 }
             }
-        }, 100);
+        }, 10);
     }
 
     function formatTime(milliseconds) {
