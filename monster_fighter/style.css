@@ -60,4 +60,5 @@ input[type="text"], input[type="number"] {
 #fight-console {
     height: 150px;
     overflow: auto;
+    background: #151515;
 }

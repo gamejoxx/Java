@@ -63,8 +63,9 @@ document.getElementById('fight-button').addEventListener('click', function() {
     // Roll for initiative
     const heroInit = rollDice(20);
     const monsterInit = rollDice(20);
-    let consoleOutput = "Rolling for initiative...\n";
-    consoleOutput += `${heroName} rolls ${heroInit}, ${monsterName} rolls ${monsterInit}\n`;
+    clearConsole();
+    appendToConsole(`Rolling for initiative...\n`, 'white');
+    appendToConsole(`${heroName} rolls ${heroInit}, ${monsterName} rolls ${monsterInit}\n`, 'white');
 
     let attackerName, defenderName, attackerAc, defenderHp, defenderAc;
     if (heroInit >= monsterInit) {
@@ -80,34 +81,46 @@ document.getElementById('fight-button').addEventListener('click', function() {
         defenderHp = heroHp;
         defenderAc = heroAc;
     }
+    appendToConsole(`${attackerName} attacks first!\n`, 'white');
 
-    // Start attack
-    consoleOutput += `${attackerName} attacks first!\n`;
-    while (heroHp > 0 && monsterHp > 0) {
+    const fightInterval = setInterval(() => {
         const attackRoll = rollDice(20);
-        if (attackRoll + 2 >= defenderAc) {  // Assuming a basic attack bonus of +2
+        const neededToHit = defenderAc - 2;  // Assuming a basic attack bonus of +2
+
+        if (attackRoll + 2 >= defenderAc) {
             const damage = rollDice(6);
             defenderHp -= damage;
-            consoleOutput += `${attackerName} swings and HITS ${defenderName} for ${damage} damage.\n`;
+            appendToConsole(`${attackerName} swings at ${defenderName} and HITS (${attackRoll + 2}/${defenderAc}) for `, 'green');
+            appendToConsole(`${damage} damage.\n`, 'red');
             if (defenderHp <= 0) {
-                consoleOutput += `${attackerName} defeats ${defenderName}!\n`;
-                break;
+                appendToConsole(`${attackerName} defeats ${defenderName}!\n`, 'white');
+                clearInterval(fightInterval);
             } else {
-                consoleOutput += `${defenderName} now has ${defenderHp} HP left.\n`;
+                appendToConsole(`${defenderName} now has ${defenderHp} HP left.\n`, 'white');
             }
         } else {
-            consoleOutput += `${attackerName} swings at ${defenderName} — MISS.\n`;
+            appendToConsole(`${attackerName} swings at ${defenderName} and MISSES (${attackRoll + 2}/${defenderAc}).\n`, 'green');
         }
-        // Swap attacker and defender
         [attackerName, defenderName] = [defenderName, attackerName];
         [attackerAc, defenderAc] = [defenderAc, attackerAc];
         [defenderHp, heroHp, monsterHp] = [heroHp, defenderHp, heroHp];
-    }
-
-    document.getElementById('fight-console').innerHTML = consoleOutput.replace(/\n/g, '<br>');
+    }, 2000);
 });
 
 function rollDice(sides) {
     return Math.floor(Math.random() * sides) + 1;
 }
 
+function appendToConsole(message, color) {
+    const consoleDiv = document.getElementById('fight-console');
+    const span = document.createElement('span');
+    span.style.color = color;
+    span.innerHTML = message.replace(/\n/g, '<br>');
+    consoleDiv.appendChild(span);
+    consoleDiv.scrollTop = consoleDiv.scrollHeight;  // Auto-scroll to the bottom of the console
+}
+
+function clearConsole() {
+    const consoleDiv = document.getElementById('fight-console');
+    consoleDiv.innerHTML = '';
+}
