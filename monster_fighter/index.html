@@ -32,8 +32,18 @@
                 <div id="monster-ac">AC: 0</div>
             </div>
         </div>
-        <button id="fight-button">FIGHT!</button>
+        <div class="fight-controls">
+            <button id="fight-button">FIGHT!</button>
+            <button id="auto-fight-button">AUTO FIGHT</button>
+            <button id="stop-button">STOP</button>
+        </div>
+        
         <div id="fight-console">Console Output: <br> Fight details will appear here...</div>
+        <div id="scoreboard">
+            <div>Total Fights: <span id="total-fights">0</span></div>
+            <div>Hero Wins: <span id="hero-wins">0</span></div>
+            <div>Monster Wins: <span id="monster-wins">0</span></div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

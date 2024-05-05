@@ -1,3 +1,6 @@
+let interval; // Declare interval at the top of the script
+
+
 document.getElementById('roll-hero').addEventListener('click', function() {
     const heroNames = ["Aldor", "Brin", "Caelum", "Dorin", "Elora"];
     const heroTypes = ["Fighter", "Barbarian", "Thief", "Ranger", "Paladin"];
@@ -104,7 +107,7 @@ document.getElementById('fight-button').addEventListener('click', function() {
         [attackerName, defenderName] = [defenderName, attackerName];
         [attackerAc, defenderAc] = [defenderAc, attackerAc];
         [defenderHp, heroHp, monsterHp] = [heroHp, defenderHp, heroHp];
-    }, 2000);
+    }, 500);
 });
 
 function rollDice(sides) {
@@ -118,6 +121,107 @@ function appendToConsole(message, color) {
     span.innerHTML = message.replace(/\n/g, '<br>');
     consoleDiv.appendChild(span);
     consoleDiv.scrollTop = consoleDiv.scrollHeight;  // Auto-scroll to the bottom of the console
+}
+
+function clearConsole() {
+    const consoleDiv = document.getElementById('fight-console');
+    consoleDiv.innerHTML = '';
+}
+
+document.getElementById('auto-fight-button').addEventListener('click', function() {
+    autoFight();
+});
+
+let totalFights = 0;
+let heroWins = 0;
+let monsterWins = 0;
+
+function updateScoreboard() {
+    document.getElementById('total-fights').textContent = totalFights;
+    document.getElementById('hero-wins').textContent = heroWins;
+    document.getElementById('monster-wins').textContent = monsterWins;
+}
+
+function fight() {
+    const heroName = document.getElementById('hero-name').value;
+    const monsterName = document.getElementById('monster-name').value;
+    let heroHp = parseInt(document.getElementById('hero-hp').textContent.split(": ")[1]);
+    let monsterHp = parseInt(document.getElementById('monster-hp').textContent.split(": ")[1]);
+    const heroAc = parseInt(document.getElementById('hero-ac').textContent.split(": ")[1]);
+    const monsterAc = parseInt(document.getElementById('monster-ac').textContent.split(": ")[1]);
+
+    // Roll for initiative
+    const heroInit = rollDice(20);
+    const monsterInit = rollDice(20);
+    clearConsole();
+    appendToConsole(`Rolling for initiative...\n`, 'white');
+    appendToConsole(`${heroName} rolls ${heroInit}, ${monsterName} rolls ${monsterInit}\n`, 'white');
+
+    let attackerName = heroInit >= monsterInit ? heroName : monsterName;
+    let defenderName = heroInit >= monsterInit ? monsterName : heroName;
+    let attackerAc = heroInit >= monsterInit ? heroAc : monsterAc;
+    let defenderAc = heroInit >= monsterInit ? monsterAc : heroAc;
+    let defenderHp = heroInit >= monsterInit ? monsterHp : heroHp;
+
+    while (heroHp > 0 && monsterHp > 0) {
+        const attackRoll = rollDice(20);
+        const neededToHit = defenderAc - 2;  // Assuming a basic attack bonus of +2
+
+        if (attackRoll + 2 >= defenderAc) {
+            const damage = rollDice(6);
+            defenderHp -= damage;
+            appendToConsole(`${attackerName} swings at ${defenderName} and HITS (${attackRoll + 2}/${defenderAc}) for `, 'green');
+            appendToConsole(`${damage} damage.\n`, 'red');
+            if (defenderHp <= 0) {
+                appendToConsole(`${attackerName} defeats ${defenderName}!\n`, 'white');
+                totalFights++;
+                if (attackerName === heroName) {
+                    heroWins++;
+                } else {
+                    monsterWins++;
+                }
+                updateScoreboard();
+                return true; // Fight ends
+            }
+        } else {
+            appendToConsole(`${attackerName} swings at ${defenderName} and MISSES (${attackRoll + 2}/${defenderAc}).\n`, 'green');
+        }
+        [attackerName, defenderName] = [defenderName, attackerName];
+        [attackerAc, defenderAc] = [defenderAc, attackerAc];
+        [defenderHp, heroHp, monsterHp] = [heroHp, defenderHp, heroHp];
+    }
+    return false; // Continue fighting
+}
+
+function autoFight() {
+    interval = setInterval(() => { // Assign setInterval to interval
+        if (!fight()) { // Continues if fight is still ongoing
+            clearInterval(interval); // Stops the interval if fight ends
+        }
+    }, 1000);
+}
+
+// Get the "STOP" button element by its ID
+const stopButton = document.getElementById('stop-button');
+
+// Add an event listener to the "STOP" button
+stopButton.addEventListener('click', () => {
+    clearInterval(interval); // Stop the interval when the button is clicked
+});
+
+
+
+function rollDice(sides) {
+    return Math.floor(Math.random() * sides) + 1;
+}
+
+function appendToConsole(message, color) {
+    const consoleDiv = document.getElementById('fight-console');
+    const span = document.createElement('span');
+    span.style.color = color;
+    span.innerHTML = message.replace(/\n/g, '<br>');
+    consoleDiv.appendChild(span);
+    consoleDiv.scrollTop = consoleDiv.scrollHeight; // Auto-scroll to the bottom
 }
 
 function clearConsole() {

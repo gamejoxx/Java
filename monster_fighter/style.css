@@ -15,28 +15,31 @@ h1 {
     color: #ff0000;
 }
 
-.battlefield {
+.battlefield, .fight-controls, #scoreboard {
     display: flex;
     justify-content: space-around;
 }
 
-.character {
+.character, .fight-controls, #scoreboard {
     background-color: #202020;
     padding: 20px;
     border: 3px solid #ff0000;
-    width: 40%;
+    width: 80%;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 button {
     background-color: #008000;
     border: 3px solid #ff0000;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    margin: 10px;
+    color: rgb(255, 255, 255);
+    padding: 10px 25px;
+    font-size: 13px;
+    font-family: 'Press Start 2P', cursive;
+    margin: 10px 5px;
     cursor: pointer;
-    display: block;
-    width: 100%;
+    width: 45%; /* Adjusted width to fit two buttons */
 }
 
 input[type="text"], input[type="number"] {
@@ -50,7 +53,7 @@ input[type="text"], input[type="number"] {
     box-sizing: border-box;
 }
 
-#hero-stats, #monster-stats, #hero-level, #monster-level, #hero-hp, #monster-hp, #hero-ac, #monster-ac, #fight-console {
+#hero-stats, #monster-stats, #hero-level, #monster-level, #hero-hp, #monster-hp, #hero-ac, #monster-ac, #fight-console, #scoreboard {
     background-color: #404040;
     margin-top: 20px;
     padding: 10px;
@@ -61,4 +64,10 @@ input[type="text"], input[type="number"] {
     height: 150px;
     overflow: auto;
     background: #151515;
+}
+
+#scoreboard {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8em; /* Smaller font size for scoreboard */
 }
