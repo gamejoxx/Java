@@ -1,0 +1,24 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+
+}
+
+main {
+    text-align: center;
+}
+
+#art-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    border: 2px solid #fff;
+}
+
