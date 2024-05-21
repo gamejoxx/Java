@@ -17,5 +17,15 @@ body {
 
 #ascii {
     white-space: pre;
-    font-size: 14px; /* Adjust this for desired text size */
+    font-size: 20px; /* Adjust this for desired text size */
 }
+
+.dark-green-1 { color: #214372; } /* Darkest green */
+.dark-green-2 { color: #06576e; }
+.dark-green-3 { color: #096961; }
+.dark-green-4 { color: #177d54; }
+.dark-green-5 { color: #087c29; }
+.dark-green-6 { color: #39a011; }
+.dark-green-7 { color: #b0de0b; }
+.dark-green-8 { color: #ffb300; }
+.dark-green-9 { color: #e76800; } /* Lightest green */
