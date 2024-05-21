@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'PrintChar21';
+    src: url('fonts/PrintChar21.ttf') format('truetype');
+}
+
+body {
+    margin: 0;
+    background-color: black;
+    color: limegreen;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#ascii {
+    white-space: pre;
+    font-size: 14px; /* Adjust this for desired text size */
+}
