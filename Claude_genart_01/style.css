@@ -3,24 +3,53 @@
     src: url('fonts/PrintChar21.ttf') format('truetype');
 }
 
-body {
-    font-family: 'PrintChar21', sans-serif;
+body, html {
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #f0f0f0;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'PrintChar21', monospace;
+    background-color: #1a1a1a;
+    color: #ffffff;
 }
 
 canvas {
-    border: 1px solid #000;
-    margin: 20px 0;
-    background-color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+h1 {
+    margin-top: 0;
+    font-size: 24px;
+}
+
+label, input {
+    display: block;
+    margin-bottom: 10px;
 }
 
 button {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #45a049;
 }
