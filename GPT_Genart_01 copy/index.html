@@ -12,23 +12,39 @@
         <h1>Chaotic Pendulum Art</h1>
         <div>
             <label for="speed">Speed:</label>
-            <input type="range" id="speed" min="1" max="20" value="10">
+            <input type="range" id="speed" min="1" max="50" value="25">
         </div>
         <div>
             <label for="trail">Trail Length:</label>
-            <input type="range" id="trail" min="10" max="200" value="100">
+            <input type="range" id="trail" min="10" max="500" value="250">
         </div>
         <div>
             <label for="chaos">Chaos:</label>
-            <input type="range" id="chaos" min="1" max="100" value="50">
+            <input type="range" id="chaos" min="1" max="200" value="100">
         </div>
         <div>
             <label for="attraction-duration">Attraction Duration:</label>
-            <input type="range" id="attraction-duration" min="1" max="100" value="50">
+            <input type="range" id="attraction-duration" min="1" max="200" value="100">
         </div>
         <div>
             <label for="attraction-strength">Attraction Strength:</label>
             <input type="range" id="attraction-strength" min="1" max="100" value="50">
+        </div>
+        <div>
+            <label for="repel-duration">Repel Duration:</label>
+            <input type="range" id="repel-duration" min="1" max="200" value="100">
+        </div>
+        <div>
+            <label for="repel-strength">Repel Strength:</label>
+            <input type="range" id="repel-strength" min="1" max="100" value="50">
+        </div>
+        <div>
+            <label for="particle-count">Particle Count:</label>
+            <input type="range" id="particle-count" min="1" max="1000" value="100">
+        </div>
+        <div>
+            <label for="randomness">Randomness:</label>
+            <input type="range" id="randomness" min="0" max="100" value="0">
         </div>
         <button id="generateBtn">Generate New Path</button>
     </div>
