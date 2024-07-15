@@ -20,8 +20,8 @@ function initParticle() {
     return {
         x: canvas.width / 2,
         y: canvas.height / 2,
-        vx: 0,
-        vy: 0,
+        vx: (Math.random() - 0.5) * 2,
+        vy: (Math.random() - 0.5) * 2,
         trail: []
     };
 }
@@ -37,7 +37,7 @@ function animate() {
     const trailLength = parseInt(trailSlider.value);
     const chaos = parseInt(chaosSlider.value) / 50; // Increase chaos factor
 
-    ctx.fillStyle = 'rgba(224, 224, 224, 0.1)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // Black background
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     particles.forEach(particle => {
@@ -45,6 +45,8 @@ function animate() {
         const ay = (Math.random() - 0.5) * chaos;
         particle.vx += ax;
         particle.vy += ay;
+        particle.vx = particle.vx * 0.99; // Slight damping to prevent speeding up
+        particle.vy = particle.vy * 0.99; // Slight damping to prevent speeding up
         particle.x += particle.vx * speed / 10;
         particle.y += particle.vy * speed / 10;
 
@@ -61,13 +63,13 @@ function animate() {
         for (let i = 1; i < particle.trail.length; i++) {
             ctx.lineTo(particle.trail[i].x, particle.trail[i].y);
         }
-        ctx.strokeStyle = 'rgba(50, 50, 50, 0.5)';
+        ctx.strokeStyle = 'rgba(255, 191, 0, 0.5)'; // Retro amber color
         ctx.lineWidth = 2;
         ctx.stroke();
 
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, 5, 0, Math.PI * 2);
-        ctx.fillStyle = '#333';
+        ctx.fillStyle = 'rgba(255, 191, 0, 1)'; // Retro amber color
         ctx.fill();
     });
 

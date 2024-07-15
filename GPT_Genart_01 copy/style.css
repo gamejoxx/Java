@@ -4,8 +4,8 @@ body, html {
     height: 100%;
     overflow: hidden;
     font-family: 'Arial', sans-serif;
-    background-color: #e0e0e0;
-    color: #333;
+    background-color: #000; /* Black background */
+    color: #FFA500; /* Retro amber color */
 }
 
 canvas {
@@ -20,7 +20,7 @@ canvas {
     position: fixed;
     top: 20px;
     right: 20px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(0, 0, 0, 0.8); /* Slightly transparent black */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -29,12 +29,12 @@ canvas {
 h1 {
     margin-top: 0;
     font-size: 24px;
-    color: #333;
+    color: #FFA500; /* Retro amber color */
 }
 
 label {
     display: inline-block;
-    width: 100px;
+    width: 150px;
     margin-bottom: 10px;
 }
 
@@ -47,13 +47,26 @@ button {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #4a4a4a;
-    color: white;
+    background-color: #FFA500; /* Retro amber color */
+    color: black;
     border: none;
     border-radius: 5px;
     transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #333;
+    background-color: #FF8C00; /* Darker retro amber color */
+}
+
+/* CRT effect */
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0,0,0,0.1), rgba(0,0,0,1));
+    image-rendering: pixelated;
+    filter: contrast(1.2) saturate(1.3) blur(0.2px);
+    opacity: 0.95;
 }
