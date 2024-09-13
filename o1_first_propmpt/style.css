@@ -1,0 +1,15 @@
+@font-face {
+    font-family: 'PrintChar21';
+    src: url('fonts/PrintChar21.ttf') format('truetype');
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    font-size: 10px;
+    color: rgb(0, 158, 0);
+    font-family: 'PrintChar21', monospace;
+    overflow: hidden;
+}

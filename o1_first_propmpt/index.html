@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Retro Triple Pendulum Art</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #000;
+    }
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: #00FF00;
+      font-family: monospace;
+      z-index: 10;
+    }
+    .slider-label {
+      margin-right: 10px;
+    }
+    .slider-container {
+      margin-bottom: 10px;
+    }
+    input[type=range] {
+      width: 200px;
+    }
+    button {
+      background-color: #000;
+      color: #00FF00;
+      border: 1px solid #00FF00;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-family: monospace;
+    }
+    button:hover {
+      background-color: #00FF00;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <div class="slider-container">
+      <span class="slider-label">Particle Count:</span>
+      <input type="range" id="particleCount" min="100" max="1000" value="500">
+    </div>
+    <div class="slider-container">
+      <span class="slider-label">Gravity Strength:</span>
+      <input type="range" id="gravityStrength" min="0.1" max="5" value="1" step="0.1">
+    </div>
+    <div class="slider-container">
+      <span class="slider-label">Pendulum Length:</span>
+      <input type="range" id="pendulumLength" min="50" max="200" value="100">
+    </div>
+    <div class="slider-container">
+      <span class="slider-label">CRT Effect:</span>
+      <input type="checkbox" id="crtEffect" checked>
+    </div>
+    <button id="pauseButton">Pause</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.4.2/lib/p5.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
