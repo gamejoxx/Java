@@ -1,187 +1,185 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const terminal = document.getElementById('terminal');
     const menuBar = document.getElementById('menu-bar');
 
-    function updateMenuBar() {
-        const date = new Date();
-        menuBar.textContent = `Vault-Tec Systems - ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-    }
-
-    updateMenuBar();
-    setInterval(updateMenuBar, 1000);
-
-    function playBeep() {
+    // Play a beep sound
+    function playBeep(frequency = 680, duration = 100) {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioCtx.createOscillator();
         oscillator.type = 'square';
-        oscillator.frequency.setValueAtTime(680, audioCtx.currentTime);
+        oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
         oscillator.connect(audioCtx.destination);
         oscillator.start();
-        setTimeout(() => oscillator.stop(), 50);
+        setTimeout(() => oscillator.stop(), duration);
     }
 
-    function playMultipleBeeps() {
-        let count = Math.floor(Math.random() * 3) + 1; // Random number of beeps between 1 and 10
-        let beepInterval = 20; // Interval between beeps in milliseconds
-        let frequency = 50; // Low frequency for beeps
-    
-        (function beepLoop(i) {
-            if (i < count) {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioCtx.createOscillator();
-                oscillator.type = 'square';
-                oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime); // Low frequency beep
-                oscillator.connect(audioCtx.destination);
-                oscillator.start();
-                setTimeout(() => oscillator.stop(), 50); // Short beep
-    
-                setTimeout(() => beepLoop(i + 1), beepInterval);
-            }
-        })(0);
-    }
-    
-
+    // Single flash of the screen at the start
     function flashScreen() {
-        terminal.style.backgroundColor = 'green';
-        setTimeout(() => terminal.style.backgroundColor = '', 50);
+        terminal.style.backgroundColor = 'white';
+        setTimeout(() => terminal.style.backgroundColor = 'black', 100);
     }
 
-    function clearScreen() {
-        terminal.textContent = '';
+    // Spinner animation
+    const spinnerChars = ['/', '-', '\\', '|'];
+    let spinnerIndex = 0;
+
+    function updateSpinner() {
+        spinnerIndex = (spinnerIndex + 1) % spinnerChars.length;
+        return spinnerChars[spinnerIndex];
     }
 
+    // Dots animation under the current line
+    function animateDots(underElement) {
+        const dotsElement = document.createElement('div');
+        dotsElement.textContent = '';
+        dotsElement.style.color = 'lime';
+        underElement.appendChild(dotsElement);
+        
+        function moveDots() {
+            dotsElement.textContent += '.';
+            if (dotsElement.textContent.length > 30) {
+                dotsElement.textContent = '';
+            }
+            setTimeout(moveDots, 100);
+        }
+        moveDots();
+    }
+
+    // Update the menu bar with the current date and time
+    function updateMenuBar() {
+        const date = new Date();
+        menuBar.textContent = `System Boot - ${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+    }
+    updateMenuBar();
+    setInterval(updateMenuBar, 1000);
+
+    // Boot messages
     const bootMessages = [
-        { text: 'PERFORMING MEMORY INTEGRITY CHECK.........', followUp: 'COMPLETE - ALL 2048KB FUNCTIONAL AND SECURE.\n' },
-        { text: 'LOADING PRIMARY KERNEL........', followUp: 'KERNEL LOADED. "A SECURE TOMORROW STARTS TODAY WITH VAULT-TEC."\n' },
-        { text: 'ESTABLISHING NETWORK CONNECTIONS........', followUp: 'CONNECTING...CONNECTING...SUCCESS!\n' },
-        { text: 'BOOTSTRAP LOADER INITIALIZED........', followUp: 'CONFIGURING SYSTEM MODULES...\n' },
-        { text: 'TEST........', followUp: '\n' },
-//        { text: 'LOADING RESOURCE PACKAGES........', followUp: 'INITIATING SYSTEM PROTOCOLS ' animateDots(), ' ENABLING SURVIVAL MECHANISMS...\n' },
-        { text: 'SYSTEM DIAGNOSTICS RUNNING........', followUp: 'PRIMARY: OKAY, SECONDARY: OKAY, TERTIARY: (THAT\'S CLASSIFIED)\n' },
-        { text: 'ACTIVATING USER INTERFACE........', followUp: 'VAULT-TEC INTERFACE ONLINE. WELCOME, OVERSEER!\n' },
-        { text: 'LOADING PERSONALIZED SETTINGS........', followUp: 'PREFERENCES SET, VAULT LIVING MADE COMFORTABLE (CONDITIONALLY).\n' },
-        { text: 'FINALIZING BOOT SEQUENCE........', followUp: 'SYSTEM STABILIZATION COMPLETE. READY TO ASSIST.\n' },
+        { text: 'INITIALIZING SYSTEM MEMORY', followUp: 'MEMORY CHECK COMPLETE: ALL MODULES FUNCTIONAL', color: 'lime' },
+        { text: 'LOADING KERNEL MODULES', followUp: 'KERNEL MODULES LOADED SUCCESSFULLY', color: 'lime' },
+        { text: 'CHECKING SYSTEM INTEGRITY', followUp: 'SYSTEM INTEGRITY: STABLE', color: 'lime' },
+        { text: 'ESTABLISHING NETWORK CONNECTION', followUp: 'NETWORK CONNECTION ESTABLISHED', color: 'lime' },
+        { text: 'LOADING USER INTERFACE', followUp: 'USER INTERFACE LOADED', color: 'lime' },
+        { text: 'FINALIZING SETUP', followUp: 'SETUP COMPLETE', color: 'lime' },
     ];
 
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
+    // Alien virus messages
+    const alienMessages = [
+        { text: '***ERROR*** FOREIGN ENTITY DETECTED', color: 'red' },
+        { text: '▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒█', color: 'red' },
+        { text: 'ALERT: SYSTEM INFILTRATED BY XENO PROTOCOL', color: 'red' },
+        { text: '▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓', color: 'lime' },
+        { text: 'ERROR: SYSTEM CONTROL OVERRIDDEN BY UNKNOWN ENTITY', color: 'red' },
+        { text: '█▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒▓▒█', color: 'lime' },
+    ];
+
+    // Randomly position alien messages
+    function randomizeAlienPosition(alienElement) {
+        alienElement.style.position = 'absolute';
+        alienElement.style.left = `${Math.random() * 90}%`;
+        alienElement.style.top = `${Math.random() * 80}%`;
+        alienElement.style.zIndex = Math.floor(Math.random() * 10);
     }
 
-    function animateDots(element, numDots, interval, callback) {
-        let currentDots = 0;
-        const addDot = () => {
-            if (currentDots < numDots) {
-                element.textContent += '.';
-                currentDots++;
-                // playMultipleBeeps();
-                setTimeout(addDot, interval);
-            } else if (callback) {
-                callback();
+    // Hex number scrubbing effect
+    function hexScrubbingEffect() {
+        const hexElement = document.createElement('div');
+        hexElement.style.color = 'lime';
+        terminal.appendChild(hexElement);
+
+        const hexChars = '0123456789ABCDEF';
+        function updateHex() {
+            let randomHex = '';
+            for (let i = 0; i < 40; i++) {
+                randomHex += hexChars[Math.floor(Math.random() * hexChars.length)];
             }
-        };
-        addDot();
+            hexElement.textContent = randomHex;
+            setTimeout(updateHex, 100);
+        }
+        updateHex();
+
+        // Remove the hex scrubbing effect after some time
+        setTimeout(() => terminal.removeChild(hexElement), 5000);
     }
 
-function maybeAnimateDots(index, batchMessages, nextAction) {
-    const randomChance = Math.random();
-    const randomNumDots = Math.floor(Math.random() * 10) + 10;
-    const randomInterval = Math.random() * (100 - 10) + 10;
-    if (randomChance < 0.6) {
-        animateDots(terminal, randomNumDots, randomInterval, () => {
-            // playBeep();
-           // playMultipleBeeps();
-           // flashScreen();
-            nextAction();
-            
-        });
-    } else {
-        nextAction();
+    // ASCII animation effect
+    function asciiAnimation() {
+        const asciiArt = [
+            '▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀',
+            '█░█░█░█░█░█░█░█░█░█░█',
+            '▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀',
+        ];
+        let asciiIndex = 0;
+
+        const asciiElement = document.createElement('div');
+        asciiElement.style.color = 'lime';
+        terminal.appendChild(asciiElement);
+
+        function updateAscii() {
+            asciiElement.textContent = asciiArt[asciiIndex];
+            asciiIndex = (asciiIndex + 1) % asciiArt.length;
+            setTimeout(updateAscii, 150);
+        }
+        updateAscii();
+
+        // Remove the ASCII animation after some time
+        setTimeout(() => terminal.removeChild(asciiElement), 6000);
     }
-}
 
+    // Display boot messages with randomness
+    function displayBootMessages(messages, alienChance = 0.5) {
+        let index = 0;
 
-    function displayBootMessages(messages) {
-        let i = 0;
+        function showMessage() {
+            const isAlienMessage = Math.random() < alienChance;
 
-        function displayBatch() {
-            clearScreen();
-            let numessages = Math.floor(Math.random() * 4) + 2;
-            let batchMessages = messages.slice(i, i + numessages);
-            updateMessage(0, batchMessages);
-        }
+            if (index < messages.length) {
+                const message = isAlienMessage ? alienMessages[Math.floor(Math.random() * alienMessages.length)] : messages[index];
+                const messageElement = document.createElement('div');
+                messageElement.style.color = message.color;
+                messageElement.textContent = `${message.text} ${updateSpinner()}...`;
+                terminal.appendChild(messageElement);
 
-        function updateMessage(index, batchMessages) {
-            if (index < batchMessages.length) {
-                let message = batchMessages[index];
-                terminal.textContent += `${message.text}...0%\n`;
-                updateLoadingPercentage(0, index, message, batchMessages);
-            }
-        }
+                if (isAlienMessage) {
+                    randomizeAlienPosition(messageElement);
+                }
 
-        function updateLoadingPercentage(loadPercentage, index, message, batchMessages) {
-            const randomDelay = Math.random() * (100 - 2)-50;
-            const randomIncrement = Math.floor(Math.random() * 1) + 1;
-            const maxPercentage = 100 + Math.round(Math.random() * -1);
-            
-            if (loadPercentage <= maxPercentage) {
-                setTimeout(() => {
-                    terminal.textContent = terminal.textContent.replace(
-                      `${message.text}...${loadPercentage}%`,
-                      `${message.text}...${loadPercentage + randomIncrement}%`
-                    );
-                    updateLoadingPercentage(loadPercentage + randomIncrement, index, message, batchMessages);
-                }, randomDelay);
-            } else {
-                terminal.textContent += `${message.followUp}\n`;
-                maybeAnimateDots(index, batchMessages, () => {
-                    if (index + 1 < batchMessages.length) {
-                        setTimeout(() => updateMessage(index + 1, batchMessages), Math.random() * 750);
+                let loadPercentage = 0;
+                const randomDelay = Math.random() * 50 + 50;
+                const loadingInterval = setInterval(() => {
+                    loadPercentage += Math.floor(Math.random() * 20) + 10;
+
+                    if (loadPercentage >= 100 || Math.random() < 0.05) {
+                        clearInterval(loadingInterval);
+                        messageElement.textContent = `${message.text} 100%`;
+                        setTimeout(showMessage, 500 + Math.random() * 500);
+                        index++;
                     } else {
-                        i += 3;
-                        if (i < messages.length) {
-                            setTimeout(displayBatch, Math.random() * 1500);
-                        } else {
-                            terminal.textContent += '\nSYSTEM READY. ENJOY YOUR DAY!\n';
-                            playMultipleBeeps();
-                            flashScreen();
-                            appendCursor();
-                        }
+                        messageElement.textContent = `${message.text} ${loadPercentage}% ${updateSpinner()}`;
                     }
-                });
+                }, randomDelay);
+
+                if (!isAlienMessage) {
+                    animateDots(messageElement); // Dots move under the current line
+                }
+
+            } else {
+                playBeep(1000, 200);
+                const completeElement = document.createElement('div');
+                completeElement.style.color = 'lime';
+                completeElement.textContent = '\nSYSTEM READY.\n';
+                terminal.appendChild(completeElement);
             }
         }
-
-        displayBatch();
+        showMessage();
     }
 
-    function appendCursor() {
-        const cursorSpan = document.createElement('span');
-        cursorSpan.id = 'cursor';
-        cursorSpan.className = 'cursor';
-        cursorSpan.textContent = '█';
-        terminal.appendChild(cursorSpan);
-    }
-
-    function bootSequence() {
-        shuffleArray(bootMessages);
+    // Start boot sequence after initial flash
+    setTimeout(() => {
+        flashScreen(); // Single screen flash at start
+        playBeep(); // Initial beep
+        hexScrubbingEffect(); // Hex scrubbing effect
+        asciiAnimation(); // ASCII animation
         displayBootMessages(bootMessages);
-    }
-
-    function bootSequenceOnce(event) {
-        if (event.type === 'keydown' || event.type === 'click') {
-            playBeep();
-            // playMultipleBeeps();
-            flashScreen();
-            bootSequence();
-        }
-    }
-
-
-    document.addEventListener('click', flashScreen);
-    document.addEventListener('keydown', flashScreen);
-    document.addEventListener('keydown', bootSequenceOnce, { once: true });
-    document.addEventListener('click', bootSequenceOnce, { once: true });
+    }, 1000);
 });

@@ -19,43 +19,42 @@ body, html {
     width: 100%;
     padding: 6px;
     box-sizing: border-box;
-    white-space: nowrap; /* Prevents menu bar text from wrapping */
+    white-space: nowrap;
 }
 
 #terminal {
-    width: 880%; /* Adjust as needed to fit 40 characters per line */
-    height: 80%x; /* Height to fit 24 lines */
-    overflow: hidden; /* Hide scroll bars */
-    padding: 5px;
-    margin: 20px 20px; /* Center the terminal horizontally */
-    margin-top: 10px; /* Add space for the menu bar */
-    font-size: 20px; /* Adjust font size to match the original character size */
-    line-height: 1.2;
-    background-color: rgb(0, 0, 0);
-    white-space: pre-wrap; /* Allows text to wrap */
-    word-wrap: break-word; /* Breaks the word to prevent overflow */
-    position: relative;
-    animation: flicker 0.1s infinite alternate;
-    transition: opacity 0.1s; /* Smooth transition for opacity changes */
+    width: 100%;
+    height: calc(90% - 40px);
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: black;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    font-size: 18px;
+    line-height: 1.4;
+}
 
+#progress-dots {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    color: lime;
+    font-family: monospace;
+    font-size: 18px;
+    padding-bottom: 10px;
 }
 
 .cursor {
     display: inline-block;
-    width: 12px;  /* Ensure the cursor has a consistent width */
     background-color: lime;
+    width: 10px;
     animation: blink-animation 1s steps(2, start) infinite;
-    visibility: visible; /* Ensure the cursor is set to be visible */
 }
 
 @keyframes blink-animation {
-    from { opacity: 1; }
-    to { opacity: 0; }
-}
-
-
-@keyframes flicker {
     0% { opacity: 1; }
-    50% { opacity: 0.9; }
+    50% { opacity: 0; }
     100% { opacity: 1; }
 }
+``

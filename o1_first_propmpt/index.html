@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Retro Triple Pendulum Art</title>
+  <title>Lorenz Attractor Particle Art</title>
   <style>
     body {
       margin: 0;
@@ -13,8 +13,8 @@
       position: absolute;
       top: 10px;
       left: 10px;
-      color: #00FF00;
-      font-family: monospace;
+      color: #fff;
+      font-family: Arial, sans-serif;
       z-index: 10;
     }
     .slider-label {
@@ -28,15 +28,18 @@
     }
     button {
       background-color: #000;
-      color: #00FF00;
-      border: 1px solid #00FF00;
+      color: #fff;
+      border: 1px solid #fff;
       padding: 5px 10px;
       cursor: pointer;
-      font-family: monospace;
+      font-family: Arial, sans-serif;
     }
     button:hover {
-      background-color: #00FF00;
+      background-color: #fff;
       color: #000;
+    }
+    label {
+      cursor: pointer;
     }
   </style>
 </head>
@@ -44,19 +47,27 @@
   <div id="controls">
     <div class="slider-container">
       <span class="slider-label">Particle Count:</span>
-      <input type="range" id="particleCount" min="100" max="1000" value="500">
+      <input type="range" id="particleCount" min="1" max="10" value="5" step="1">
     </div>
     <div class="slider-container">
-      <span class="slider-label">Gravity Strength:</span>
-      <input type="range" id="gravityStrength" min="0.1" max="5" value="1" step="0.1">
+      <span class="slider-label">Trail Length:</span>
+      <input type="range" id="trailLength" min="10" max="1000" value="50" step="5">
     </div>
     <div class="slider-container">
-      <span class="slider-label">Pendulum Length:</span>
-      <input type="range" id="pendulumLength" min="50" max="200" value="100">
+      <span class="slider-label">Attractor Speed:</span>
+      <input type="range" id="attractorSpeed" min="1" max="100" value="10" step="10">
     </div>
     <div class="slider-container">
-      <span class="slider-label">CRT Effect:</span>
-      <input type="checkbox" id="crtEffect" checked>
+      <span class="slider-label">Sigma (σ):</span>
+      <input type="range" id="sigma" min="4" max="24" value="10" step="0.1">
+    </div>
+    <div class="slider-container">
+      <span class="slider-label">Rho (ρ):</span>
+      <input type="range" id="rho" min="14" max="60" value="28" step="0.1">
+    </div>
+    <div class="slider-container">
+      <span class="slider-label">Beta (β):</span>
+      <input type="range" id="beta" min="1.5" max="3.5" value="2.6667" step="0.01">
     </div>
     <button id="pauseButton">Pause</button>
   </div>
