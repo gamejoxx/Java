@@ -17,9 +17,14 @@
                 <input type="text" id="hero-type" placeholder="Type">
                 <button id="roll-hero">Roll Hero</button>
                 <div id="hero-stats">Stats: Str, Dex, Con, Int, Wis, Cha</div>
-                <div id="hero-level">Lvl: <input type="number" id="hero-level-input" value="1" min="1" max="20"></div>
+                <div id="hero-level">Lvl: <span id="hero-level-value">1</span></div>
                 <div id="hero-hp">HP: 0</div>
                 <div id="hero-ac">AC: 0</div>
+                <div id="hero-progression">
+                    <div id="hero-xp">XP: 0</div>
+                    <div id="hero-gold">Gold: 0</div>
+                    <div id="hero-deaths">Deaths: 0</div>
+                </div>
             </div>
             <div class="character monster">
                 <h2>Monster</h2>
@@ -36,6 +41,7 @@
             <button id="fight-button">FIGHT!</button>
             <button id="auto-fight-button">AUTO FIGHT</button>
             <button id="stop-button">STOP</button>
+            <button id="reset-button">RESET</button>
         </div>
         
         <div id="fight-console">Console Output: <br> Fight details will appear here...</div>
@@ -43,6 +49,64 @@
             <div>Total Fights: <span id="total-fights">0</span></div>
             <div>Hero Wins: <span id="hero-wins">0</span></div>
             <div>Monster Wins: <span id="monster-wins">0</span></div>
+        </div>
+        
+        <div id="settings-panel">
+            <h3>Game Settings</h3>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <label for="xp-per-kill">XP per Kill:</label>
+                    <input type="number" id="xp-per-kill" value="100" min="1">
+                </div>
+                <div class="setting-item">
+                    <label for="xp-to-level">XP to Level Up:</label>
+                    <input type="number" id="xp-to-level" value="300" min="1">
+                </div>
+                <div class="setting-item">
+                    <label for="gold-per-kill">Gold per Kill:</label>
+                    <input type="number" id="gold-per-kill" value="50" min="0">
+                </div>
+                <div class="setting-item">
+                    <label for="gold-loss-percent">Gold Loss % on Death:</label>
+                    <input type="number" id="gold-loss-percent" value="25" min="0" max="100">
+                </div>
+                <div class="setting-item">
+                    <label for="xp-loss-percent">XP Loss % on Death:</label>
+                    <input type="number" id="xp-loss-percent" value="15" min="0" max="100">
+                </div>
+                <div class="setting-item">
+                    <label for="max-deaths">Max Deaths:</label>
+                    <input type="number" id="max-deaths" value="3" min="1">
+                </div>
+                <div class="setting-item">
+                    <label for="monster-level-scaling">Monster Level Scaling:</label>
+                    <input type="number" id="monster-level-scaling" value="1" min="0" step="0.1">
+                </div>
+                <div class="setting-item">
+                    <label for="hero-hp-per-level">Hero HP per Level:</label>
+                    <input type="number" id="hero-hp-per-level" value="5" min="1" step="0.5">
+                </div>
+                <div class="setting-item">
+                    <label for="hero-damage-per-level">Hero Damage per Level:</label>
+                    <input type="number" id="hero-damage-per-level" value="0.5" min="0" step="0.1">
+                </div>
+                <div class="setting-item">
+                    <label for="monster-hp-per-level">Monster HP per Level:</label>
+                    <input type="number" id="monster-hp-per-level" value="4" min="1" step="0.5">
+                </div>
+                <div class="setting-item">
+                    <label for="monster-damage-per-level">Monster Damage per Level:</label>
+                    <input type="number" id="monster-damage-per-level" value="0.33" min="0" step="0.1">
+                </div>
+                <div class="setting-item">
+                    <label for="fight-speed">Fight Speed (ms):</label>
+                    <input type="number" id="fight-speed" value="500" min="100" step="100">
+                </div>
+                <div class="setting-item">
+                    <label for="auto-fight-delay">Auto-Fight Delay (ms):</label>
+                    <input type="number" id="auto-fight-delay" value="1000" min="100" step="100">
+                </div>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
