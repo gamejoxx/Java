@@ -165,3 +165,24 @@ input[type="text"], input[type="number"] {
     font-size: 0.7em;
     margin-top: 10px;
 }
+
+/* Bonus Button Styles */
+.bonus-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.bonus-button {
+    background-color: #400000;
+    border: 2px solid #ff0000;
+    color: #ffcc00;
+    width: 30%;
+    padding: 5px;
+    font-size: 0.7em;
+    cursor: default;
+}
+
+.bonus-button:disabled {
+    opacity: 1;
+}

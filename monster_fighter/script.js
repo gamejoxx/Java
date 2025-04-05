@@ -9,15 +9,146 @@ let heroLevel = 1;
 let heroDeaths = 0;
 let gameOver = false;
 
+// Loot bonus system - Hero
+let heroBonusAC = 0;
+let heroBonusHP = 0;
+let heroBonusDamage = 0;
+
+// Loot bonus system - Monster
+let monsterBonusAC = 0;
+let monsterBonusHP = 0;
+let monsterBonusDamage = 0;
+
 // High scores array
 let highScores = [];
-const MAX_HIGH_SCORES = 10;
+const MAX_HIGH_SCORES = 5;
 
 // Load high scores from localStorage when page loads
 document.addEventListener('DOMContentLoaded', function() {
     loadHighScores();
     updateHighScoreTable();
+    createBonusButtons();
 });
+
+// Function to create bonus buttons for hero and monster
+function createBonusButtons() {
+    // Create container for hero bonus buttons
+    const heroBonusContainer = document.createElement('div');
+    heroBonusContainer.className = 'bonus-buttons';
+    
+    // Create hero bonus buttons
+    const heroACButton = document.createElement('button');
+    heroACButton.id = 'hero-bonus-ac';
+    heroACButton.className = 'bonus-button';
+    heroACButton.disabled = true;
+    heroACButton.textContent = 'AC +0';
+    
+    const heroHPButton = document.createElement('button');
+    heroHPButton.id = 'hero-bonus-hp';
+    heroHPButton.className = 'bonus-button';
+    heroHPButton.disabled = true;
+    heroHPButton.textContent = 'HP +0';
+    
+    const heroDamageButton = document.createElement('button');
+    heroDamageButton.id = 'hero-bonus-damage';
+    heroDamageButton.className = 'bonus-button';
+    heroDamageButton.disabled = true;
+    heroDamageButton.textContent = 'DAM +0';
+    
+    // Add hero buttons to container
+    heroBonusContainer.appendChild(heroACButton);
+    heroBonusContainer.appendChild(heroHPButton);
+    heroBonusContainer.appendChild(heroDamageButton);
+    
+    // Add hero bonus container to hero panel
+    document.querySelector('.hero').appendChild(heroBonusContainer);
+    
+    // Create container for monster bonus buttons
+    const monsterBonusContainer = document.createElement('div');
+    monsterBonusContainer.className = 'bonus-buttons';
+    
+    // Create monster bonus buttons
+    const monsterACButton = document.createElement('button');
+    monsterACButton.id = 'monster-bonus-ac';
+    monsterACButton.className = 'bonus-button';
+    monsterACButton.disabled = true;
+    monsterACButton.textContent = 'AC +0';
+    
+    const monsterHPButton = document.createElement('button');
+    monsterHPButton.id = 'monster-bonus-hp';
+    monsterHPButton.className = 'bonus-button';
+    monsterHPButton.disabled = true;
+    monsterHPButton.textContent = 'HP +0';
+    
+    const monsterDamageButton = document.createElement('button');
+    monsterDamageButton.id = 'monster-bonus-damage';
+    monsterDamageButton.className = 'bonus-button';
+    monsterDamageButton.disabled = true;
+    monsterDamageButton.textContent = 'DAM +0';
+    
+    // Add monster buttons to container
+    monsterBonusContainer.appendChild(monsterACButton);
+    monsterBonusContainer.appendChild(monsterHPButton);
+    monsterBonusContainer.appendChild(monsterDamageButton);
+    
+    // Add monster bonus container to monster panel
+    document.querySelector('.monster').appendChild(monsterBonusContainer);
+}
+
+// Function to update bonus button displays
+function updateBonusButtons() {
+    // Update hero bonus buttons
+    document.getElementById('hero-bonus-ac').textContent = `AC +${heroBonusAC}`;
+    document.getElementById('hero-bonus-hp').textContent = `HP +${heroBonusHP}`;
+    document.getElementById('hero-bonus-damage').textContent = `DAM +${heroBonusDamage}`;
+    
+    // Update monster bonus buttons
+    document.getElementById('monster-bonus-ac').textContent = `AC +${monsterBonusAC}`;
+    document.getElementById('monster-bonus-hp').textContent = `HP +${monsterBonusHP}`;
+    document.getElementById('monster-bonus-damage').textContent = `DAM +${monsterBonusDamage}`;
+}
+
+// Function to roll a random bonus for hero and monster
+function rollBonuses() {
+    const bonusTypes = ['ac', 'hp', 'damage'];
+    
+    // Roll for hero
+    const heroBonusType = bonusTypes[Math.floor(Math.random() * bonusTypes.length)];
+    switch(heroBonusType) {
+        case 'ac':
+            heroBonusAC += 1;
+            appendToConsole(`Hero gains +1 AC bonus!\n`, 'yellow');
+            break;
+        case 'hp':
+            heroBonusHP += 1;
+            appendToConsole(`Hero gains +1 HP per level bonus!\n`, 'yellow');
+            break;
+        case 'damage':
+            heroBonusDamage += 1;
+            appendToConsole(`Hero gains +1 damage bonus!\n`, 'yellow');
+            break;
+    }
+    
+    // Roll for monster
+    const monsterBonusType = bonusTypes[Math.floor(Math.random() * bonusTypes.length)];
+    switch(monsterBonusType) {
+        case 'ac':
+            monsterBonusAC += 1;
+            appendToConsole(`Monster gains +1 AC bonus!\n`, 'red');
+            break;
+        case 'hp':
+            monsterBonusHP += 1;
+            appendToConsole(`Monster gains +1 HP per level bonus!\n`, 'red');
+            break;
+        case 'damage':
+            monsterBonusDamage += 1;
+            appendToConsole(`Monster gains +1 damage bonus!\n`, 'red');
+            break;
+    }
+    
+    // Update bonus button displays
+    updateBonusButtons();
+}
 
 // Function to load high scores from localStorage
 function loadHighScores() {
@@ -155,6 +286,15 @@ document.getElementById('reset-button').addEventListener('click', function() {
     monsterWins = 0;
     autoFightActive = false;
     
+    // Reset bonus values
+    heroBonusAC = 0;
+    heroBonusHP = 0;
+    heroBonusDamage = 0;
+    monsterBonusAC = 0;
+    monsterBonusHP = 0;
+    monsterBonusDamage = 0;
+    updateBonusButtons();
+    
     // Clear game over message if present
     const gameOverMsg = document.querySelector('.game-over');
     if (gameOverMsg) {
@@ -188,30 +328,37 @@ document.getElementById('roll-hero').addEventListener('click', function() {
         heroGold = 0;
         heroDeaths = 0;
     } else {
-        // For game over, also reset level
+        // For game over, also reset level and bonuses
         heroXP = 0;
         heroGold = 0;
         heroLevel = 1;
         heroDeaths = 0;
+        heroBonusAC = 0;
+        heroBonusHP = 0;
+        heroBonusDamage = 0;
+        monsterBonusAC = 0;
+        monsterBonusHP = 0;
+        monsterBonusDamage = 0;
+        updateBonusButtons();
         gameOver = false;
     }
     
     const heroNames = ["Aldor", "Brin", "Caelum", "Dorin", "Elora"];
     const heroTypes = ["Fighter", "Barbarian", "Thief", "Ranger", "Paladin"];
     const hero = {
-        name: heroNames[Math.floor(Math.random() * heroNames.length)],
+        name: `${heroNames[Math.floor(Math.random() * heroNames.length)]} ${Math.floor(100 + Math.random() * 900)}`,    
         type: heroTypes[Math.floor(Math.random() * heroTypes.length)],
         stats: rollStats(),
         level: heroLevel,
     };
     
-    // Use the configurable HP per level value
+    // Use the configurable HP per level value plus bonus HP
     const heroHpPerLevel = parseFloat(document.getElementById('hero-hp-per-level').value);
-    hero.hp = hero.level * heroHpPerLevel + Math.floor(Math.random() * 8) + 1;
+    hero.hp = hero.level * heroHpPerLevel + Math.floor(Math.random() * 8) + 1 + (heroBonusHP * hero.level);
     
-    // Use hero-specific AC per level from settings
+    // Use hero-specific AC per level from settings plus bonus AC
     const heroAcPerLevel = parseFloat(document.getElementById('hero-ac-per-level').value);
-    hero.ac = 10 + Math.floor(hero.level * heroAcPerLevel);
+    hero.ac = 10 + Math.floor(hero.level * heroAcPerLevel) + heroBonusAC;
 
     document.getElementById('hero-name').value = hero.name;
     document.getElementById('hero-type').value = hero.type;
@@ -239,13 +386,13 @@ function rollMonster() {
         level: scaledLevel,
     };
     
-    // Use the configurable HP per level value
+    // Use the configurable HP per level value plus bonus HP
     const monsterHpPerLevel = parseFloat(document.getElementById('monster-hp-per-level').value);
-    monster.hp = monster.level * monsterHpPerLevel + Math.floor(Math.random() * 8) + 1;
+    monster.hp = monster.level * monsterHpPerLevel + Math.floor(Math.random() * 8) + 1 + (monsterBonusHP * monster.level);
     
-    // Use monster-specific AC per level from settings
+    // Use monster-specific AC per level from settings plus bonus AC
     const monsterAcPerLevel = parseFloat(document.getElementById('monster-ac-per-level').value);
-    monster.ac = 10 + Math.floor(monster.level * monsterAcPerLevel);
+    monster.ac = 10 + Math.floor(monster.level * monsterAcPerLevel) + monsterBonusAC;
 
     document.getElementById('monster-name').value = monster.name;
     document.getElementById('monster-type').value = monster.type;
@@ -336,10 +483,10 @@ function startSingleFight() {
             const heroDamagePerLevel = parseFloat(document.getElementById('hero-damage-per-level').value);
             const monsterDamagePerLevel = parseFloat(document.getElementById('monster-damage-per-level').value);
             
-            // Damage calculation with configurable level scaling
+            // Damage calculation with configurable level scaling and bonus damage
             const damage = isAttackerHero ? 
-                rollDice(6) + Math.floor(heroLevel * heroDamagePerLevel) : // Hero damage scales with level
-                rollDice(6) + Math.floor(parseInt(document.getElementById('monster-level-input').value) * monsterDamagePerLevel); // Monster damage
+                rollDice(6) + Math.floor(heroLevel * heroDamagePerLevel) + heroBonusDamage : // Hero damage scales with level + bonus
+                rollDice(6) + Math.floor(parseInt(document.getElementById('monster-level-input').value) * monsterDamagePerLevel) + monsterBonusDamage; // Monster damage + bonus
             
             defenderHp -= damage;
             appendToConsole(`${attackerName} swings at ${defenderName} and HITS (Roll: ${diceRoll} +${hitBonus} vs AC ${defenderAc}) for `, 'green');
@@ -454,13 +601,16 @@ function handleHeroVictory() {
         heroLevel++;
         appendToConsole(`LEVEL UP! Hero is now level ${heroLevel}!\n`, 'yellow');
         
+        // Roll bonuses on level up
+        rollBonuses();
+        
         // Update hero HP and level with configurable HP per level value
         const heroHpPerLevel = parseFloat(document.getElementById('hero-hp-per-level').value);
-        const heroHp = heroLevel * heroHpPerLevel + Math.floor(Math.random() * 8) + 1;
+        const heroHp = heroLevel * heroHpPerLevel + Math.floor(Math.random() * 8) + 1 + (heroBonusHP * heroLevel);
         
         // Update AC with hero-specific AC per level from settings
         const heroAcPerLevel = parseFloat(document.getElementById('hero-ac-per-level').value);
-        const heroAc = 10 + Math.floor(heroLevel * heroAcPerLevel);
+        const heroAc = 10 + Math.floor(heroLevel * heroAcPerLevel) + heroBonusAC;
         
         document.getElementById('hero-hp').textContent = `HP: ${heroHp}`;
         document.getElementById('hero-level-value').textContent = heroLevel;
@@ -515,7 +665,7 @@ function handleHeroDefeat() {
     } else {
         // Instead of rolling a new hero, just regenerate HP for the same hero
         const heroHpPerLevel = parseFloat(document.getElementById('hero-hp-per-level').value);
-        const heroHp = heroLevel * heroHpPerLevel + Math.floor(Math.random() * 8) + 1;
+        const heroHp = heroLevel * heroHpPerLevel + Math.floor(Math.random() * 8) + 1 + (heroBonusHP * heroLevel);
         document.getElementById('hero-hp').textContent = `HP: ${heroHp}`;
         appendToConsole(`Hero has recovered with ${heroHp} HP!\n`, 'green');
         
