@@ -9,6 +9,135 @@ let heroLevel = 1;
 let heroDeaths = 0;
 let gameOver = false;
 
+// High scores array
+let highScores = [];
+const MAX_HIGH_SCORES = 10;
+
+// Load high scores from localStorage when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadHighScores();
+    updateHighScoreTable();
+});
+
+// Function to load high scores from localStorage
+function loadHighScores() {
+    const storedScores = localStorage.getItem('monsterFighterHighScores');
+    if (storedScores) {
+        highScores = JSON.parse(storedScores);
+    } else {
+        highScores = [];
+    }
+}
+
+// Function to save high scores to localStorage
+function saveHighScores() {
+    localStorage.setItem('monsterFighterHighScores', JSON.stringify(highScores));
+}
+
+// Function to update the high score table in the DOM
+function updateHighScoreTable() {
+    const tableBody = document.getElementById('high-score-body');
+    tableBody.innerHTML = '';
+
+    highScores.forEach((score, index) => {
+        const row = document.createElement('tr');
+        
+        const rankCell = document.createElement('td');
+        rankCell.textContent = index + 1;
+        row.appendChild(rankCell);
+        
+        const nameCell = document.createElement('td');
+        nameCell.textContent = score.name;
+        row.appendChild(nameCell);
+        
+        const levelCell = document.createElement('td');
+        levelCell.textContent = score.level;
+        row.appendChild(levelCell);
+        
+        const goldCell = document.createElement('td');
+        goldCell.textContent = score.gold;
+        row.appendChild(goldCell);
+        
+        tableBody.appendChild(row);
+    });
+
+    // Fill empty rows if less than 10 scores
+    for (let i = highScores.length; i < MAX_HIGH_SCORES; i++) {
+        const emptyRow = document.createElement('tr');
+        for (let j = 0; j < 4; j++) {
+            const emptyCell = document.createElement('td');
+            emptyCell.textContent = j === 0 ? i + 1 : '---';
+            emptyRow.appendChild(emptyCell);
+        }
+        tableBody.appendChild(emptyRow);
+    }
+}
+
+// Function to check if the current hero's score qualifies for the high score list
+function checkHighScore() {
+    const heroName = document.getElementById('hero-name').value;
+    
+    // Create a new score object
+    const newScore = {
+        name: heroName,
+        level: heroLevel,
+        gold: heroGold
+    };
+    
+    // Check if this score should be added to high scores
+    let shouldAdd = false;
+    
+    // If we have less than MAX_HIGH_SCORES, add it
+    if (highScores.length < MAX_HIGH_SCORES) {
+        shouldAdd = true;
+    } else {
+        // Check if this score is higher than the lowest score
+        // Sort by level first, then by gold
+        const lowestScore = [...highScores].sort((a, b) => {
+            if (a.level !== b.level) {
+                return a.level - b.level;
+            }
+            return a.gold - b.gold;
+        })[0];
+        
+        if (newScore.level > lowestScore.level || 
+            (newScore.level === lowestScore.level && newScore.gold > lowestScore.gold)) {
+            shouldAdd = true;
+            // Remove lowest score
+            highScores = highScores.filter(score => 
+                score !== lowestScore
+            );
+        }
+    }
+    
+    if (shouldAdd) {
+        highScores.push(newScore);
+        // Sort high scores by level (descending), then by gold (descending)
+        highScores.sort((a, b) => {
+            if (b.level !== a.level) {
+                return b.level - a.level;
+            }
+            return b.gold - a.gold;
+        });
+        
+        // Keep only the top MAX_HIGH_SCORES
+        highScores = highScores.slice(0, MAX_HIGH_SCORES);
+        
+        saveHighScores();
+        updateHighScoreTable();
+        
+        appendToConsole(`NEW HIGH SCORE! Level ${heroLevel} with ${heroGold} gold!\n`, 'yellow');
+    }
+}
+
+// Add event listener for "Clear Scores" button
+document.getElementById('clear-scores').addEventListener('click', function() {
+    highScores = [];
+    saveHighScores();
+    updateHighScoreTable();
+    appendToConsole('High scores cleared!\n', 'yellow');
+});
+
 // RESET functionality
 document.getElementById('reset-button').addEventListener('click', function() {
     // Clear all intervals
@@ -79,7 +208,10 @@ document.getElementById('roll-hero').addEventListener('click', function() {
     // Use the configurable HP per level value
     const heroHpPerLevel = parseFloat(document.getElementById('hero-hp-per-level').value);
     hero.hp = hero.level * heroHpPerLevel + Math.floor(Math.random() * 8) + 1;
-    hero.ac = 10 + Math.floor(hero.stats.dexterity / 2); // Simplified AC calculation
+    
+    // Use AC per level from settings
+    const acPerLevel = parseFloat(document.getElementById('ac-per-level').value);
+    hero.ac = 10 + Math.floor(hero.level * acPerLevel);
 
     document.getElementById('hero-name').value = hero.name;
     document.getElementById('hero-type').value = hero.type;
@@ -110,7 +242,10 @@ function rollMonster() {
     // Use the configurable HP per level value
     const monsterHpPerLevel = parseFloat(document.getElementById('monster-hp-per-level').value);
     monster.hp = monster.level * monsterHpPerLevel + Math.floor(Math.random() * 8) + 1;
-    monster.ac = 10 + Math.floor(monster.stats.dexterity / 2); // Simplified AC calculation
+    
+    // Use AC per level from settings
+    const acPerLevel = parseFloat(document.getElementById('ac-per-level').value);
+    monster.ac = 10 + Math.floor(monster.level * acPerLevel);
 
     document.getElementById('monster-name').value = monster.name;
     document.getElementById('monster-type').value = monster.type;
@@ -180,8 +315,16 @@ function startSingleFight() {
     appendToConsole(`${attackerName} attacks first!\n`, 'white');
 
     fightInterval = setInterval(() => {
-        const attackRoll = rollDice(20) + (attackerName === heroName ? Math.floor(heroLevel / 3) : 0);
-        const neededToHit = defenderAc;
+        // Get hit bonus per level from settings
+        const hitBonusPerLevel = parseFloat(document.getElementById('hit-bonus-per-level').value);
+        
+        // Calculate attack bonus based on level
+        const attackerLevel = attackerName === heroName ? heroLevel : parseInt(document.getElementById('monster-level-input').value);
+        const hitBonus = Math.floor(attackerLevel * hitBonusPerLevel);
+        
+        // Roll attack with bonus
+        const diceRoll = rollDice(20);
+        const attackRoll = diceRoll + hitBonus;
 
         if (attackRoll >= defenderAc) {
             // Get configurable damage scaling values
@@ -194,7 +337,7 @@ function startSingleFight() {
                 rollDice(6) + Math.floor(parseInt(document.getElementById('monster-level-input').value) * monsterDamagePerLevel); // Monster damage
             
             defenderHp -= damage;
-            appendToConsole(`${attackerName} swings at ${defenderName} and HITS (${attackRoll}/${defenderAc}) for `, 'green');
+            appendToConsole(`${attackerName} swings at ${defenderName} and HITS (Roll: ${diceRoll} +${hitBonus} vs AC ${defenderAc}) for `, 'green');
             appendToConsole(`${damage} damage.\n`, 'red');
             if (defenderHp <= 0) {
                 appendToConsole(`${attackerName} defeats ${defenderName}!\n`, 'white');
@@ -232,7 +375,7 @@ function startSingleFight() {
                 appendToConsole(`${defenderName} now has ${defenderHp} HP left.\n`, 'white');
             }
         } else {
-            appendToConsole(`${attackerName} swings at ${defenderName} and MISSES (${attackRoll}/${defenderAc}).\n`, 'green');
+            appendToConsole(`${attackerName} swings at ${defenderName} and MISSES (Roll: ${diceRoll} +${hitBonus} vs AC ${defenderAc}).\n`, 'green');
         }
         [attackerName, defenderName] = [defenderName, attackerName];
         [attackerAc, defenderAc] = [defenderAc, attackerAc];
@@ -309,8 +452,14 @@ function handleHeroVictory() {
         // Update hero HP and level with configurable HP per level value
         const heroHpPerLevel = parseFloat(document.getElementById('hero-hp-per-level').value);
         const heroHp = heroLevel * heroHpPerLevel + Math.floor(Math.random() * 8) + 1;
+        
+        // Update AC with AC per level from settings
+        const acPerLevel = parseFloat(document.getElementById('ac-per-level').value);
+        const heroAc = 10 + Math.floor(heroLevel * acPerLevel);
+        
         document.getElementById('hero-hp').textContent = `HP: ${heroHp}`;
         document.getElementById('hero-level-value').textContent = heroLevel;
+        document.getElementById('hero-ac').textContent = `AC: ${heroAc}`;
     }
     
     appendToConsole(`Hero gained ${xpGain} XP and ${goldGain} gold!\n`, 'yellow');
@@ -346,6 +495,9 @@ function handleHeroDefeat() {
         gameOver = true;
         autoFightActive = false; // Stop auto-fighting
         appendToConsole(`GAME OVER! Hero has died ${heroDeaths} times. Roll a new hero to start again.\n`, 'red');
+        
+        // Check if this run qualifies for the high score table
+        checkHighScore();
         
         // Create a game over message in the UI
         const gameOverMsg = document.createElement('div');

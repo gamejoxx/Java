@@ -99,6 +99,14 @@
                     <input type="number" id="monster-damage-per-level" value="0.33" min="0" step="0.1">
                 </div>
                 <div class="setting-item">
+                    <label for="ac-per-level">AC per Level:</label>
+                    <input type="number" id="ac-per-level" value="0.5" min="0" step="0.1">
+                </div>
+                <div class="setting-item">
+                    <label for="hit-bonus-per-level">Hit Bonus per Level:</label>
+                    <input type="number" id="hit-bonus-per-level" value="0.33" min="0" step="0.1">
+                </div>
+                <div class="setting-item">
                     <label for="fight-speed">Fight Speed (ms):</label>
                     <input type="number" id="fight-speed" value="500" min="100" step="100">
                 </div>
@@ -107,6 +115,24 @@
                     <input type="number" id="auto-fight-delay" value="1000" min="100" step="100">
                 </div>
             </div>
+        </div>
+        
+        <div id="high-score-panel">
+            <h3>HIGH SCORES</h3>
+            <table id="high-score-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Level</th>
+                        <th>Gold</th>
+                    </tr>
+                </thead>
+                <tbody id="high-score-body">
+                    <!-- High scores will be populated here -->
+                </tbody>
+            </table>
+            <button id="clear-scores">CLEAR SCORES</button>
         </div>
     </div>
     <script src="script.js"></script>

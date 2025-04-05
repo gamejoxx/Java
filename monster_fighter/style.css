@@ -20,7 +20,7 @@ h1 {
     justify-content: space-around;
 }
 
-.character, .fight-controls, #scoreboard, #settings-panel {
+.character, .fight-controls, #scoreboard, #settings-panel, #high-score-panel {
     background-color: #202020;
     padding: 20px;
     border: 3px solid #ff0000;
@@ -121,4 +121,47 @@ input[type="text"], input[type="number"] {
     0% { opacity: 1; }
     50% { opacity: 0.5; }
     100% { opacity: 1; }
+}
+
+/* High Score Table Styles */
+#high-score-panel h3 {
+    color: #ffcc00;
+    margin-bottom: 15px;
+}
+
+#high-score-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    font-size: 0.8em;
+}
+
+#high-score-table th,
+#high-score-table td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ff0000;
+}
+
+#high-score-table th {
+    background-color: #400000;
+    color: #ffcc00;
+}
+
+#high-score-table tbody tr {
+    background-color: #202020;
+}
+
+#high-score-table tbody tr:nth-child(odd) {
+    background-color: #303030;
+}
+
+#high-score-table tbody tr:first-child {
+    background-color: #004000;
+}
+
+#clear-scores {
+    width: auto;
+    font-size: 0.7em;
+    margin-top: 10px;
 }
