@@ -209,9 +209,9 @@ document.getElementById('roll-hero').addEventListener('click', function() {
     const heroHpPerLevel = parseFloat(document.getElementById('hero-hp-per-level').value);
     hero.hp = hero.level * heroHpPerLevel + Math.floor(Math.random() * 8) + 1;
     
-    // Use AC per level from settings
-    const acPerLevel = parseFloat(document.getElementById('ac-per-level').value);
-    hero.ac = 10 + Math.floor(hero.level * acPerLevel);
+    // Use hero-specific AC per level from settings
+    const heroAcPerLevel = parseFloat(document.getElementById('hero-ac-per-level').value);
+    hero.ac = 10 + Math.floor(hero.level * heroAcPerLevel);
 
     document.getElementById('hero-name').value = hero.name;
     document.getElementById('hero-type').value = hero.type;
@@ -243,9 +243,9 @@ function rollMonster() {
     const monsterHpPerLevel = parseFloat(document.getElementById('monster-hp-per-level').value);
     monster.hp = monster.level * monsterHpPerLevel + Math.floor(Math.random() * 8) + 1;
     
-    // Use AC per level from settings
-    const acPerLevel = parseFloat(document.getElementById('ac-per-level').value);
-    monster.ac = 10 + Math.floor(monster.level * acPerLevel);
+    // Use monster-specific AC per level from settings
+    const monsterAcPerLevel = parseFloat(document.getElementById('monster-ac-per-level').value);
+    monster.ac = 10 + Math.floor(monster.level * monsterAcPerLevel);
 
     document.getElementById('monster-name').value = monster.name;
     document.getElementById('monster-type').value = monster.type;
@@ -315,11 +315,16 @@ function startSingleFight() {
     appendToConsole(`${attackerName} attacks first!\n`, 'white');
 
     fightInterval = setInterval(() => {
-        // Get hit bonus per level from settings
-        const hitBonusPerLevel = parseFloat(document.getElementById('hit-bonus-per-level').value);
+        // Get entity-specific hit bonus per level from settings
+        const isAttackerHero = attackerName === heroName;
+        const hitBonusPerLevel = isAttackerHero ? 
+            parseFloat(document.getElementById('hero-hit-bonus-per-level').value) : 
+            parseFloat(document.getElementById('monster-hit-bonus-per-level').value);
         
         // Calculate attack bonus based on level
-        const attackerLevel = attackerName === heroName ? heroLevel : parseInt(document.getElementById('monster-level-input').value);
+        const attackerLevel = isAttackerHero ? 
+            heroLevel : 
+            parseInt(document.getElementById('monster-level-input').value);
         const hitBonus = Math.floor(attackerLevel * hitBonusPerLevel);
         
         // Roll attack with bonus
@@ -332,7 +337,7 @@ function startSingleFight() {
             const monsterDamagePerLevel = parseFloat(document.getElementById('monster-damage-per-level').value);
             
             // Damage calculation with configurable level scaling
-            const damage = attackerName === heroName ? 
+            const damage = isAttackerHero ? 
                 rollDice(6) + Math.floor(heroLevel * heroDamagePerLevel) : // Hero damage scales with level
                 rollDice(6) + Math.floor(parseInt(document.getElementById('monster-level-input').value) * monsterDamagePerLevel); // Monster damage
             
@@ -344,7 +349,7 @@ function startSingleFight() {
                 clearInterval(fightInterval);
                 
                 // Handle hero victory or death
-                if (attackerName === heroName) {
+                if (isAttackerHero) {
                     // Hero wins
                     handleHeroVictory();
                     
@@ -453,9 +458,9 @@ function handleHeroVictory() {
         const heroHpPerLevel = parseFloat(document.getElementById('hero-hp-per-level').value);
         const heroHp = heroLevel * heroHpPerLevel + Math.floor(Math.random() * 8) + 1;
         
-        // Update AC with AC per level from settings
-        const acPerLevel = parseFloat(document.getElementById('ac-per-level').value);
-        const heroAc = 10 + Math.floor(heroLevel * acPerLevel);
+        // Update AC with hero-specific AC per level from settings
+        const heroAcPerLevel = parseFloat(document.getElementById('hero-ac-per-level').value);
+        const heroAc = 10 + Math.floor(heroLevel * heroAcPerLevel);
         
         document.getElementById('hero-hp').textContent = `HP: ${heroHp}`;
         document.getElementById('hero-level-value').textContent = heroLevel;
