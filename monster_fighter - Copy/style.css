@@ -1,0 +1,73 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Press Start 2P', cursive;
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+}
+
+.container {
+    padding: 20px;
+}
+
+h1 {
+    color: #ff0000;
+}
+
+.battlefield, .fight-controls, #scoreboard {
+    display: flex;
+    justify-content: space-around;
+}
+
+.character, .fight-controls, #scoreboard {
+    background-color: #202020;
+    padding: 20px;
+    border: 3px solid #ff0000;
+    width: 80%;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button {
+    background-color: #008000;
+    border: 3px solid #ff0000;
+    color: rgb(255, 255, 255);
+    padding: 10px 25px;
+    font-size: 13px;
+    font-family: 'Press Start 2P', cursive;
+    margin: 10px 5px;
+    cursor: pointer;
+    width: 45%; /* Adjusted width to fit two buttons */
+}
+
+input[type="text"], input[type="number"] {
+    width: 90%;
+    padding: 5px;
+    margin: 5px 0;
+    background: #404040;
+    border: 1px solid #ff0000;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    box-sizing: border-box;
+}
+
+#hero-stats, #monster-stats, #hero-level, #monster-level, #hero-hp, #monster-hp, #hero-ac, #monster-ac, #fight-console, #scoreboard {
+    background-color: #404040;
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ff0000;
+}
+
+#fight-console {
+    height: 150px;
+    overflow: auto;
+    background: #151515;
+}
+
+#scoreboard {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8em; /* Smaller font size for scoreboard */
+}

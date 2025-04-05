@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DnD Style Fighting Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>DnD Style Fighting Game</h1>
+        <div class="battlefield">
+            <div class="character hero">
+                <h2>Hero</h2>
+                <input type="text" id="hero-name" placeholder="Name">
+                <input type="text" id="hero-type" placeholder="Type">
+                <button id="roll-hero">Roll Hero</button>
+                <div id="hero-stats">Stats: Str, Dex, Con, Int, Wis, Cha</div>
+                <div id="hero-level">Lvl: <input type="number" id="hero-level-input" value="1" min="1" max="20"></div>
+                <div id="hero-hp">HP: 0</div>
+                <div id="hero-ac">AC: 0</div>
+            </div>
+            <div class="character monster">
+                <h2>Monster</h2>
+                <input type="text" id="monster-name" placeholder="Name">
+                <input type="text" id="monster-type" placeholder="Type">
+                <button id="roll-monster">Roll Monster</button>
+                <div id="monster-stats">Stats: Str, Dex, Con, Int, Wis, Cha</div>
+                <div id="monster-level">Lvl: <input type="number" id="monster-level-input" value="1" min="1" max="20"></div>
+                <div id="monster-hp">HP: 0</div>
+                <div id="monster-ac">AC: 0</div>
+            </div>
+        </div>
+        <div class="fight-controls">
+            <button id="fight-button">FIGHT!</button>
+            <button id="auto-fight-button">AUTO FIGHT</button>
+            <button id="stop-button">STOP</button>
+        </div>
+        
+        <div id="fight-console">Console Output: <br> Fight details will appear here...</div>
+        <div id="scoreboard">
+            <div>Total Fights: <span id="total-fights">0</span></div>
+            <div>Hero Wins: <span id="hero-wins">0</span></div>
+            <div>Monster Wins: <span id="monster-wins">0</span></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
