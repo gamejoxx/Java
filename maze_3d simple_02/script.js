@@ -25,10 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Game level
         level: 1,
         
-        // Player gold
-        gold: 0,
-        
-        // Simple maze layout (0=wall, 1=path, 2=exit, 3=treasure, 4=enemy)
+        // Simple maze layout (0=wall, 1=path, 2=exit)
         map: [],
         
         // Movement lock to prevent rapid key presses
@@ -49,12 +46,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const CEILING_COLOR = '#003300';
     const EXIT_COLOR = '#00FF00';
     const EXIT_FLOOR_COLOR = '#003300'; // Darkest green used so far
-    const TREASURE_COLOR = '#FFFF00'; // Yellow for treasure
-    const ENEMY_COLOR = '#FF0000'; // Red for enemies
     
     // Update level display
     function updateLevelDisplay() {
-        document.getElementById('status-bar').textContent = `DUNGEON LEVEL ${state.level} | GOLD: ${state.gold}`;
+        document.getElementById('status-bar').textContent = `DUNGEON LEVEL ${state.level}`;
     }
     
     // Generate a random maze using improved algorithm to ensure connectivity
@@ -197,35 +192,6 @@ document.addEventListener('DOMContentLoaded', function() {
             maze[height-2][width-2] = 2;
         }
         
-        // Place 1-2 treasure chests randomly on path tiles
-        const numTreasures = 1 + Math.floor(Math.random() * 2); // 1 or 2 treasures
-        let treasuresPlaced = 0;
-        
-        // Get all available path cells (excluding start and exit)
-        const pathCells = [];
-        for (let y = 0; y < height; y++) {
-            for (let x = 0; x < width; x++) {
-                if (maze[y][x] === 1 && !(x === startX && y === startY) && !(x === exitX && y === exitY)) {
-                    pathCells.push({x, y});
-                }
-            }
-        }
-        
-        // Randomly place treasures
-        while (treasuresPlaced < numTreasures && pathCells.length > 0) {
-            const randomIndex = Math.floor(Math.random() * pathCells.length);
-            const cell = pathCells.splice(randomIndex, 1)[0];
-            maze[cell.y][cell.x] = 3; // 3 = treasure
-            treasuresPlaced++;
-        }
-        
-        // Place 1 enemy per level
-        if (pathCells.length > 0) {
-            const randomIndex = Math.floor(Math.random() * pathCells.length);
-            const cell = pathCells.splice(randomIndex, 1)[0];
-            maze[cell.y][cell.x] = 4; // 4 = enemy
-        }
-        
         return maze;
     }
     
@@ -270,42 +236,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         y * tileSize,
                         tileSize,
                         tileSize
-                    );
-                } else if (state.map[y][x] === 3) {
-                    // Treasure
-                    mapCtx.fillStyle = '#001100'; // Path background
-                    mapCtx.fillRect(
-                        x * tileSize,
-                        y * tileSize,
-                        tileSize,
-                        tileSize
-                    );
-                    
-                    // Draw a small yellow square for treasure
-                    mapCtx.fillStyle = TREASURE_COLOR;
-                    mapCtx.fillRect(
-                        x * tileSize + tileSize * 0.25,
-                        y * tileSize + tileSize * 0.25,
-                        tileSize * 0.5,
-                        tileSize * 0.5
-                    );
-                } else if (state.map[y][x] === 4) {
-                    // Enemy
-                    mapCtx.fillStyle = '#001100'; // Path background
-                    mapCtx.fillRect(
-                        x * tileSize,
-                        y * tileSize,
-                        tileSize,
-                        tileSize
-                    );
-                    
-                    // Draw a small red square for enemy
-                    mapCtx.fillStyle = ENEMY_COLOR;
-                    mapCtx.fillRect(
-                        x * tileSize + tileSize * 0.25,
-                        y * tileSize + tileSize * 0.25,
-                        tileSize * 0.5,
-                        tileSize * 0.5
                     );
                 } else {
                     // Path
@@ -364,8 +294,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Calculate which exit cells are visible from the player's position
         // This prevents seeing the exit through walls
         const visibleExitCells = [];
-        const visibleTreasureCells = [];
-        const visibleEnemyCells = [];
         
         // Draw walls and track visible cells
         const numRays = canvas.width;
@@ -410,8 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Perform DDA (Digital Differential Analysis)
             let hit = 0; // Was there a wall hit?
             let side; // Was a N/S or E/W wall hit?
-            let cellType = 0; // Type of cell hit (0=wall, 1=path, 2=exit, 3=treasure, 4=enemy)
-            let wallDist = 0; // Distance to the wall
+            let cellType = 0; // Type of cell hit (0=wall, 1=path, 2=exit)
             
             // Keep track of cells we pass through before hitting a wall
             const rayPath = [];
@@ -436,29 +363,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (state.map[mapY][mapX] === 0) {
                         hit = 1;
                         cellType = state.map[mapY][mapX];
-                    } else if (state.map[mapY][mapX] === 2 && hit === 0) {
-                        // Mark exit cell as visible for this ray (only if we haven't hit a wall)
+                    } else if (state.map[mapY][mapX] === 2) {
+                        // Mark exit cell as visible for this ray
                         visibleExitCells.push({x: mapX, y: mapY, screenX: x});
-                    } else if (state.map[mapY][mapX] === 3 && hit === 0) {
-                        // Mark treasure cell as visible for this ray (only if we haven't hit a wall)
-                        visibleTreasureCells.push({
-                            x: mapX, 
-                            y: mapY, 
-                            screenX: x, 
-                            dist: (side === 0) 
-                                ? (mapX - state.playerX + (1 - stepX) / 2) / rayDirX
-                                : (mapY - state.playerY + (1 - stepY) / 2) / rayDirY
-                        });
-                    } else if (state.map[mapY][mapX] === 4 && hit === 0) {
-                        // Mark enemy cell as visible for this ray (only if we haven't hit a wall)
-                        visibleEnemyCells.push({
-                            x: mapX, 
-                            y: mapY, 
-                            screenX: x, 
-                            dist: (side === 0) 
-                                ? (mapX - state.playerX + (1 - stepX) / 2) / rayDirX
-                                : (mapY - state.playerY + (1 - stepY) / 2) / rayDirY
-                        });
                     }
                 } else {
                     hit = 1;
@@ -490,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.fillRect(x, drawStart, 1, drawEnd - drawStart);
         }
         
-        // Draw exit floor and special floor tiles for only visible cells
+        // Draw exit floor for only visible exit cells
         // Loop through each ray
         for (let x = 0; x < numRays; x++) {
             const cameraX = 2 * x / numRays - 1;
@@ -520,52 +427,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 const mapX = Math.floor(floorX);
                 const mapY = Math.floor(floorY);
                 
-                // Check if this is a special tile AND it's visible
-                if (mapX >= 0 && mapY >= 0 && mapX < state.map[0].length && mapY < state.map.length) {
-                    if (state.map[mapY][mapX] === 2) {
-                        // Check if this exit cell is visible from the player's position
-                        const isVisible = visibleExitCells.some(cell => cell.x === mapX && cell.y === mapY);
+                // Check if this is the exit tile AND it's visible
+                if (mapX >= 0 && mapY >= 0 && mapX < state.map[0].length && mapY < state.map.length && 
+                    state.map[mapY][mapX] === 2) {
+                    
+                    // Check if this exit cell is visible from the player's position
+                    const isVisible = visibleExitCells.some(cell => cell.x === mapX && cell.y === mapY);
+                    
+                    if (isVisible) {
+                        // Draw exit floor - solid dark green with occasional brighter pixels
+                        ctx.fillStyle = EXIT_FLOOR_COLOR;
+                        ctx.fillRect(x, y, 1, 1);
                         
-                        if (isVisible) {
-                            // Draw exit floor - solid dark green with occasional brighter pixels
-                            ctx.fillStyle = EXIT_FLOOR_COLOR;
+                        // Add subtle pulsing effect (less frequent bright dots)
+                        if (Math.random() > 0.98) {
+                            ctx.fillStyle = EXIT_COLOR;
                             ctx.fillRect(x, y, 1, 1);
-                            
-                            // Add subtle pulsing effect (less frequent bright dots)
-                            if (Math.random() > 0.98) {
-                                ctx.fillStyle = EXIT_COLOR;
-                                ctx.fillRect(x, y, 1, 1);
-                            }
-                        }
-                    } else if (state.map[mapY][mapX] === 3) {
-                        // Check if this treasure cell is visible from the player's position
-                        const isVisible = visibleTreasureCells.some(cell => cell.x === mapX && cell.y === mapY);
-                        
-                        if (isVisible) {
-                            // Draw treasure floor - similar to exit but in yellow/gold
-                            ctx.fillStyle = '#663300'; // Darker gold/brown floor base
-                            ctx.fillRect(x, y, 1, 1);
-                            
-                            // Add glittering effect for treasure
-                            if (Math.random() > 0.85) {
-                                ctx.fillStyle = TREASURE_COLOR; // Bright yellow dots
-                                ctx.fillRect(x, y, 1, 1);
-                            }
-                        }
-                    } else if (state.map[mapY][mapX] === 4) {
-                        // Check if this enemy cell is visible from the player's position
-                        const isVisible = visibleEnemyCells.some(cell => cell.x === mapX && cell.y === mapY);
-                        
-                        if (isVisible) {
-                            // Draw enemy floor - dark floor with red dots
-                            ctx.fillStyle = '#001100'; // Normal floor color
-                            ctx.fillRect(x, y, 1, 1);
-                            
-                            // Add red dots for enemy
-                            if (Math.random() > 0.7) {
-                                ctx.fillStyle = ENEMY_COLOR; // Red dots
-                                ctx.fillRect(x, y, 1, 1);
-                            }
                         }
                     }
                 }
@@ -649,20 +526,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         return;
                     }
                     
-                    // Check if we reached a treasure
-                    if (forwardCheck.type === 3) {
-                        // Collect treasure
-                        state.gold += 10;
-                        // Update the map (remove treasure)
-                        state.map[Math.floor(newY)][Math.floor(newX)] = 1;
-                        // Update display
-                        updateLevelDisplay();
-                        // Play collect sound (would be here)
-                        
-                        // Show gold collection message
-                        showMessage("+10 GOLD!", 1000);
-                    }
-                    
                     // Lock movement briefly to prevent rapid key presses
                     lockMovement();
                 }
@@ -685,19 +548,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         lockMovement(true); // Lock movement until next level loads
                         nextLevel();
                         return;
-                    }
-                    
-                    // Check if we reached a treasure
-                    if (backwardCheck.type === 3) {
-                        // Collect treasure
-                        state.gold += 10;
-                        // Update the map (remove treasure)
-                        state.map[Math.floor(backY)][Math.floor(backX)] = 1;
-                        // Update display
-                        updateLevelDisplay();
-                        
-                        // Show gold collection message
-                        showMessage("+10 GOLD!", 1000);
                     }
                     
                     // Lock movement briefly
@@ -762,26 +612,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-    }
-    
-    // Show a temporary message on screen
-    function showMessage(text, duration) {
-        const message = document.createElement('div');
-        message.textContent = text;
-        message.style.position = 'absolute';
-        message.style.top = '40%';
-        message.style.left = '50%';
-        message.style.transform = 'translate(-50%, -50%)';
-        message.style.color = TREASURE_COLOR;
-        message.style.fontSize = '24px';
-        message.style.fontFamily = 'PrintChar21, monospace';
-        message.style.textShadow = '0 0 10px #FFFF00';
-        message.style.zIndex = 100;
-        document.getElementById('game-container').appendChild(message);
-        
-        setTimeout(() => {
-            message.remove();
-        }, duration);
     }
     
     // Initialize first level

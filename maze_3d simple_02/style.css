@@ -1,0 +1,45 @@
+@font-face {
+    font-family: 'PrintChar21';
+    src: url('fonts/PrintChar21.ttf') format('truetype');
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    font-size: 10px;
+    color: rgb(0, 158, 0);
+    font-family: 'PrintChar21', monospace;
+    overflow: hidden;
+}
+
+#game-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#dungeon-view {
+    border: 2px solid rgb(0, 158, 0);
+    background-color: #000;
+    width: 640px;
+    height: 480px;
+    image-rendering: pixelated;
+}
+
+#ui-overlay {
+    width: 640px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 16px;
+}
+
+#status-bar, #controls-hint {
+    color: rgb(0, 158, 0);
+    text-shadow: 0 0 5px rgb(0, 158, 0);
+}
