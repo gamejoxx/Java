@@ -3,10 +3,91 @@ body, html {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    font-family: 'Cinzel', serif;
+    background: #1a1a2e;
   }
   
   canvas {
     display: block;
-    background: #000; /* Assuming a dark background for the dungeon */
   }
+
+#maze-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+#title {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #ff9f1c;
+  font-size: 2rem;
+  margin: 0;
+  padding: 10px 20px;
+  background: rgba(22, 33, 62, 0.8);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  text-shadow: 0 0 10px rgba(255, 159, 28, 0.7);
+  letter-spacing: 2px;
+  border-left: 4px solid #e71d36;
+}
+
+#controls {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 15px;
+  background: rgba(22, 33, 62, 0.8);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  border-right: 4px solid #e71d36;
+  max-width: 250px;
+}
+
+button {
+  background: #2ec4b6;
+  color: #16213e;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s, transform 0.1s;
+  margin-bottom: 10px;
+  margin-right: 5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+button:hover {
+  background: #3a86ff;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+button:active {
+  transform: translateY(0px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+input[type="range"] {
+  width: 150px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  accent-color: #ff9f1c;
+}
+
+label {
+  color: #2ec4b6;
+  font-size: 14px;
+  margin-right: 10px;
+  display: block;
+  margin-top: 8px;
+}
 
