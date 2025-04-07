@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Attractor Visualization</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Using CDN versions for reliability -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+<div class="control-panel">
+    <h1>3D Strange Attractor</h1>
+    <div class="button-group">
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <button id="reset">Reset</button>
+        <button id="randomize">Randomize</button>
+        <select id="attractor-type">
+            <option value="dejong">De Jong</option>
+            <option value="lorenz">Lorenz</option>
+            <option value="aizawa">Aizawa</option>
+            <option value="rossler">Rössler</option>
+        </select>
+    </div>
+    <div class="sliders">
+        <div class="slider-group">
+            <label for="a">a:</label>
+            <input type="range" id="a" min="-3.14" max="3.14" step="0.01" value="0.97">
+            <span id="a-value">0.97</span>
+        </div>
+        <div class="slider-group">
+            <label for="b">b:</label>
+            <input type="range" id="b" min="-3.14" max="3.14" step="0.01" value="-1.90">
+            <span id="b-value">-1.90</span>
+        </div>
+        <div class="slider-group">
+            <label for="c">c:</label>
+            <input type="range" id="c" min="-3.14" max="3.14" step="0.01" value="1.38">
+            <span id="c-value">1.38</span>
+        </div>
+        <div class="slider-group">
+            <label for="d">d:</label>
+            <input type="range" id="d" min="-3.14" max="3.14" step="0.01" value="-1.50">
+            <span id="d-value">-1.50</span>
+        </div>
+    </div>
+    <div class="sliders">
+        <div class="slider-group">
+            <label for="points">Points:</label>
+            <input type="range" id="points" min="1000" max="50000" step="1000" value="10000">
+            <span id="points-value">10000</span>
+        </div>
+        <div class="slider-group">
+            <label for="speed">Speed:</label>
+            <input type="range" id="speed" min="1" max="100" step="1" value="20">
+            <span id="speed-value">20</span>
+        </div>
+        <div class="slider-group">
+            <label for="size">Size:</label>
+            <input type="range" id="size" min="0.1" max="2" step="0.1" value="0.5">
+            <span id="size-value">0.5</span>
+        </div>
+        <div class="slider-group">
+            <label for="trail">Trail:</label>
+            <input type="range" id="trail" min="10" max="5000" step="10" value="500">
+            <span id="trail-value">500</span>
+        </div>
+    </div>
+    <div class="sliders">
+        <div class="color-controls">
+            <label for="colorScheme">Color:</label>
+            <select id="colorScheme">
+                <option value="rainbow">Rainbow</option>
+                <option value="electric">Electric</option>
+                <option value="sunset">Sunset</option>
+                <option value="ocean">Ocean</option>
+                <option value="monochrome">Monochrome</option>
+            </select>
+            <label for="bgColor">Background:</label>
+            <select id="bgColor">
+                <option value="black">Black</option>
+                <option value="dark">Dark Gray</option>
+                <option value="light">Light Gray</option>
+                <option value="white">White</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div id="container"></div>
+<script src="script.js"></script>
+</body>
+</html>
