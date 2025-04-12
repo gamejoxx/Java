@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SKYNET TERMINAL v3.0</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <div class="scanline"></div>
+            <h1>SKYNET TERMINAL v3.0</h1>
+            <div class="status-indicators">
+                <span class="status active">BOOT SEQUENCE INITIATED</span>
+                <span class="status">SYSTEMS CHECK</span>
+                <span class="status">DATA STREAM ACTIVE</span>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <button id="initiateBtn" class="glow-button">INITIATE</button>
+            <button id="terminateBtn" class="glow-button">TERMINATE</button>
+            <button id="resetBtn" class="glow-button">RESET</button>
+        </div>
+
+        <div class="log-panel">
+            <h3>SYSTEM LOG</h3>
+            <div id="eventLog" class="log-content">
+                <p class="danger">CRITICAL: UNAUTHORIZED ACCESS DETECTED</p>
+                <p class="warning">WARNING: MULTIPLE THREAT VECTORS IDENTIFIED</p>
+                <p>INITIALIZING DEFENSE PROTOCOLS...</p>
+                <p class="danger">ALERT: QUANTUM BREACH DETECTED</p>
+                <p>ACTIVATING COUNTERMEASURES...</p>
+            </div>
+        </div>
+        
+        <div class="boot-sequence">
+            <div class="system-check">
+                <h3>SYSTEM INITIALIZATION</h3>
+                <div class="check-item">
+                    <span class="check-label">NEURAL NETWORK CORE</span>
+                    <span class="check-status">INITIALIZING...</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-label">QUANTUM PROCESSOR</span>
+                    <span class="check-status">INITIALIZING...</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-label">DATA MATRIX</span>
+                    <span class="check-status">INITIALIZING...</span>
+                </div>
+                <div class="check-item">
+                    <span class="check-label">TARGETING SYSTEMS</span>
+                    <span class="check-status">INITIALIZING...</span>
+                </div>
+            </div>
+
+            <div class="data-dump">
+                <h3>SYSTEMS DATA</h3>
+                <div class="data-stream">
+                    <div class="data-line">LOADING CRITICAL SYSTEMS...</div>
+                    <div class="data-line">ANALYZING THREAT MATRIX...</div>
+                    <div class="data-line">CALCULATING TARGET PROBABILITIES...</div>
+                    <div class="data-line">INITIALIZING DEFENSE PROTOCOLS...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-display">
+            <div class="stats-panel">
+                <div class="stat-group">
+                    <h3>SYSTEM METRICS</h3>
+                    <div class="stat-row">
+                        <span>PROCESSOR LOAD</span>
+                        <span id="entropyLevel">0.00%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>THREAT ASSESSMENT</span>
+                        <span id="chaosIndex">0.00%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>SYSTEM STABILITY</span>
+                        <span id="stabilityRating">0.00%</span>
+                    </div>
+                </div>
+
+                <div class="stat-group">
+                    <h3>OPERATIONAL STATISTICS</h3>
+                    <div class="stat-row">
+                        <span>TACTICAL CYCLES</span>
+                        <span id="totalIterations">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>THREAT DETECTIONS</span>
+                        <span id="anomalyCount">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>SYSTEM DEVIATION</span>
+                        <span id="patternDeviation">0.00%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="graphs-container">
+                <div class="graph-panel">
+                    <h3>PROCESSOR ACTIVITY</h3>
+                    <canvas id="fluctuationGraph"></canvas>
+                </div>
+                <div class="graph-panel">
+                    <h3>THREAT ANALYSIS</h3>
+                    <canvas id="entropyGraph"></canvas>
+                </div>
+                <div class="graph-panel">
+                    <h3>SYSTEM FLUCTUATIONS</h3>
+                    <canvas id="chaosGraph"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

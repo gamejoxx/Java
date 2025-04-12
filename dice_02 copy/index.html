@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QUANTUM SIMULATION TERMINAL</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <div class="scanline"></div>
+            <h1>QUANTUM SIMULATION TERMINAL v1.0</h1>
+            <div class="status-indicators">
+                <span class="status active">ONLINE</span>
+                <span class="status">QUANTUM STABILIZED</span>
+                <span class="status">DATA STREAM ACTIVE</span>
+            </div>
+        </div>
+        
+        <div class="control-panel">
+            <div class="parameter-group">
+                <h3>QUANTUM PARAMETERS</h3>
+                <div class="parameter">
+                    <label>ENTROPY FACTOR</label>
+                    <input type="range" id="entropyFactor" min="0" max="100" value="50">
+                </div>
+                <div class="parameter">
+                    <label>CHAOS MODULATOR</label>
+                    <input type="range" id="chaosModulator" min="0" max="100" value="30">
+                </div>
+                <div class="parameter">
+                    <label>STABILITY THRESHOLD</label>
+                    <input type="range" id="stabilityThreshold" min="0" max="100" value="70">
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="startBtn" class="glow-button">INITIATE SIMULATION</button>
+                <button id="stopBtn" class="glow-button">TERMINATE</button>
+                <button id="resetBtn" class="glow-button">RESET MATRIX</button>
+                <button id="randomizeBtn" class="glow-button">RANDOMIZE PARAMETERS</button>
+            </div>
+        </div>
+
+        <div class="data-display">
+            <div class="stats-panel">
+                <div class="stat-group">
+                    <h3>QUANTUM METRICS</h3>
+                    <div class="stat-row">
+                        <span>ENTROPY LEVEL</span>
+                        <span id="entropyLevel">0.00</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>CHAOS INDEX</span>
+                        <span id="chaosIndex">0.00</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>STABILITY RATING</span>
+                        <span id="stabilityRating">0.00</span>
+                    </div>
+                </div>
+
+                <div class="stat-group">
+                    <h3>SIMULATION STATISTICS</h3>
+                    <div class="stat-row">
+                        <span>TOTAL ITERATIONS</span>
+                        <span id="totalIterations">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>ANOMALY COUNT</span>
+                        <span id="anomalyCount">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>PATTERN DEVIATION</span>
+                        <span id="patternDeviation">0.00%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="graphs-container">
+                <div class="graph-panel">
+                    <h3>QUANTUM FLUCTUATIONS</h3>
+                    <canvas id="fluctuationGraph"></canvas>
+                </div>
+                <div class="graph-panel">
+                    <h3>ENTROPY DISTRIBUTION</h3>
+                    <canvas id="entropyGraph"></canvas>
+                </div>
+                <div class="graph-panel">
+                    <h3>CHAOS PATTERNS</h3>
+                    <canvas id="chaosGraph"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="log-panel">
+            <h3>EVENT LOG</h3>
+            <div id="eventLog" class="log-content"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

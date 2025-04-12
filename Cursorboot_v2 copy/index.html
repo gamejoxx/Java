@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS-7 ORBITAL COMMAND</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="screen">
+        <!-- CRT and scan effects -->
+        <div class="crt-overlay"></div>
+        <div class="scan-line"></div>
+        <div class="glitch-overlay"></div>
+        
+        <!-- Main header with system info -->
+        <div id="header">
+            <div class="logo">NEXUS-7 ORBITAL COMMAND</div>
+            <div id="status-bar">INITIALIZING...</div>
+            <div id="security-level">SEC LEVEL: ALPHA</div>
+        </div>
+        
+        <!-- Main interface area with multiple sections -->
+        <div id="interface-container">
+            <!-- Primary terminal window -->
+            <div id="terminal-container" class="interface-panel">
+                <div class="panel-header">
+                    <span class="panel-title">PRIMARY TERMINAL</span>
+                    <div class="controls">
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                    </div>
+                </div>
+                <div id="terminal" class="panel-content"></div>
+            </div>
+            
+            <!-- 3D Holographic display -->
+            <div id="hologram-container" class="interface-panel">
+                <div class="panel-header">
+                    <span class="panel-title">QUANTUM HOLOGRAM</span>
+                    <div class="controls">
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                    </div>
+                </div>
+                <div id="hologram-display" class="panel-content">
+                    <canvas id="hologram-canvas"></canvas>
+                    <div id="hologram-stats">
+                        <div class="hologram-stat">ROTATION: <span id="rotation-value">0.0</span>°</div>
+                        <div class="hologram-stat">DENSITY: <span id="density-value">75.4</span>%</div>
+                        <div class="hologram-stat">STABILITY: <span id="stability-value">91.2</span>%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- System diagnostics window -->
+            <div id="diagnostics-container" class="interface-panel">
+                <div class="panel-header">
+                    <span class="panel-title">SYSTEM DIAGNOSTICS</span>
+                    <div class="controls">
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                    </div>
+                </div>
+                <div id="diagnostics" class="panel-content"></div>
+            </div>
+            
+            <!-- Memory dump window -->
+            <div id="memory-container" class="interface-panel">
+                <div class="panel-header">
+                    <span class="panel-title">MEMORY BUFFER</span>
+                    <div class="controls">
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                    </div>
+                </div>
+                <div id="memory-dump" class="panel-content"></div>
+            </div>
+        </div>
+        
+        <!-- Progress indicators -->
+        <div id="progress-container">
+            <div id="progress-wrapper">
+                <div id="progress-bar"></div>
+                <div id="progress-percentage">0%</div>
+            </div>
+            <div id="progress-details">
+                <div class="progress-detail">CORE INIT: <span id="core-status">PENDING</span></div>
+                <div class="progress-detail">NEURAL SYNC: <span id="neural-status">PENDING</span></div>
+                <div class="progress-detail">QUANTUM FLUX: <span id="quantum-status">PENDING</span></div>
+            </div>
+        </div>
+        
+        <!-- Alert popup container -->
+        <div id="alert-container"></div>
+        
+        <!-- Footer with system telemetry -->
+        <div id="footer">
+            <div id="coordinates">X:00.00 Y:00.00 Z:00.00</div>
+            <div id="date-time"></div>
+            <div id="system-temp">CORE TEMP: 31.4°C</div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="three.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

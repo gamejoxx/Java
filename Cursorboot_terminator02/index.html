@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-800 CYBERDYNE SYSTEMS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Visual Effects Layers -->
+    <div class="red-filter"></div>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+    <div class="glitch-effect"></div>
+    
+    <!-- Main Interface -->
+    <div class="screen" style="opacity: 1;">
+        <!-- Heads-up display elements -->
+        <div class="hud-border top"></div>
+        <div class="hud-border right"></div>
+        <div class="hud-border bottom"></div>
+        <div class="hud-border left"></div>
+        
+        <!-- Visual Effects -->
+        <div class="crt-overlay"></div>
+        <div class="scan-line"></div>
+        <div class="glitch-overlay"></div>
+        <div class="particle-overlay"></div>
+        
+        <!-- Main header with system info -->
+        <div id="header">
+            <div class="logo">CYBERDYNE SYSTEMS T-800</div>
+            <div id="status-bar">STANDBY</div>
+            <button id="start-button" class="start-button">REBOOT</button>
+        </div>
+        
+        <!-- Main interface area -->
+        <div id="interface-container">
+            <!-- Primary terminal window -->
+            <div id="terminal-container" class="interface-panel">
+                <div class="panel-header">
+                    <span class="panel-title">SYS:DIAGNOSTIC</span>
+                    <div class="controls">
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                    </div>
+                </div>
+                <div id="terminal" class="panel-content">SYSTEM READY > PRESS REBOOT TO INITIALIZE</div>
+            </div>
+            
+            <!-- 3D Endoskeleton display -->
+            <div id="hologram-container" class="interface-panel">
+                <div class="panel-header">
+                    <span class="panel-title">SYSTEM SCHEMATIC</span>
+                    <div class="controls">
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                    </div>
+                </div>
+                <div id="hologram-display" class="panel-content">
+                    <canvas id="hologram-canvas"></canvas>
+                    <div id="hologram-stats">
+                        <div class="hologram-stat">POWER: <span id="power-value">0.0</span>%</div>
+                        <div class="hologram-stat">COMBAT: <span id="combat-value">0.0</span>%</div>
+                        <div class="hologram-stat">INTEGRITY: <span id="integrity-value">0.0</span>%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Target acquisition window -->
+            <div id="diagnostics-container" class="interface-panel">
+                <div class="panel-header">
+                    <span class="panel-title">TARGET ACQUISITION</span>
+                    <div class="controls">
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                    </div>
+                </div>
+                <div id="target-display" class="panel-content">
+                    <div id="target-scanner">
+                        <div id="scanner-grid"></div>
+                        <div id="scanner-target"></div>
+                        <div id="scanner-crosshair">
+                            <div class="crosshair-h"></div>
+                            <div class="crosshair-v"></div>
+                        </div>
+                    </div>
+                    <div id="target-info">STANDBY...</div>
+                </div>
+            </div>
+            
+            <!-- Mission parameters window -->
+            <div id="mission-container" class="interface-panel">
+                <div class="panel-header">
+                    <span class="panel-title">MISSION PARAMETERS</span>
+                    <div class="controls">
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                    </div>
+                </div>
+                <div id="mission-content" class="panel-content">
+                    <div id="mission-objective">PRIMARY OBJECTIVE: <span id="primary-target">--</span></div>
+                    <div id="mission-status">STATUS: <span class="blinking">STANDBY</span></div>
+                    <div id="threat-level">THREAT LEVEL: <span>--</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progress indicators -->
+        <div id="progress-container">
+            <div id="progress-wrapper">
+                <div id="progress-bar"></div>
+                <div id="progress-percentage">0%</div>
+            </div>
+            <div id="progress-details">
+                <div class="progress-detail">NEURAL NET: <span id="neural-status">OFFLINE</span></div>
+                <div class="progress-detail">TARGETING: <span id="targeting-status">OFFLINE</span></div>
+                <div class="progress-detail">WEAPONS: <span id="weapons-status">OFFLINE</span></div>
+            </div>
+        </div>
+        
+        <!-- Alert popup container -->
+        <div id="alert-container"></div>
+        
+        <!-- Footer with system telemetry -->
+        <div id="footer">
+            <div id="coordinates">X:00.00 Y:00.00 Z:00.00</div>
+            <div id="date-time"></div>
+            <div id="system-temp">CORE TEMP: 0.0°C</div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../libs/gsap-public/minified/gsap.min.js"></script>
+    <script src="../libs/particles.js-master/particles.min.js"></script>
+    <script src="three.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

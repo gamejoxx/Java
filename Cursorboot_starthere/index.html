@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL PROTOCOL: NEXUS-7</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Start Screen -->
+    <div id="start-screen" class="start-screen">
+        <div class="start-content">
+            <h1 class="title">NEXUS-7</h1>
+            <h2 class="subtitle">TERMINAL PROTOCOL</h2>
+            <button id="start-button" class="start-button">INITIALIZE SYSTEM</button>
+        </div>
+    </div>
+
+    <!-- Main Interface -->
+    <div class="screen" style="display: none;">
+        <!-- Visual Effects -->
+        <div class="crt-overlay"></div>
+        <div class="scan-line"></div>
+        <div class="glitch-overlay"></div>
+        <div class="particle-overlay"></div>
+        
+        <!-- Main header with system info -->
+        <div id="header">
+            <div class="logo">NEXUS-7 TERMINAL PROTOCOL</div>
+            <div id="status-bar">SYSTEM OFFLINE</div>
+            <div id="security-level">SECURITY LEVEL: OMEGA</div>
+        </div>
+        
+        <!-- Main interface area -->
+        <div id="interface-container">
+            <!-- Primary terminal window -->
+            <div id="terminal-container" class="interface-panel">
+                <div class="panel-header">
+                    <span class="panel-title">PRIMARY TERMINAL</span>
+                    <div class="controls">
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                    </div>
+                </div>
+                <div id="terminal" class="panel-content"></div>
+            </div>
+            
+            <!-- 3D Holographic display -->
+            <div id="hologram-container" class="interface-panel">
+                <div class="panel-header">
+                    <span class="panel-title">QUANTUM HOLOGRAM</span>
+                    <div class="controls">
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                    </div>
+                </div>
+                <div id="hologram-display" class="panel-content">
+                    <canvas id="hologram-canvas"></canvas>
+                    <div id="hologram-stats">
+                        <div class="hologram-stat">ROTATION: <span id="rotation-value">0.0</span>°</div>
+                        <div class="hologram-stat">DENSITY: <span id="density-value">0.0</span>%</div>
+                        <div class="hologram-stat">STABILITY: <span id="stability-value">0.0</span>%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- System diagnostics window -->
+            <div id="diagnostics-container" class="interface-panel">
+                <div class="panel-header">
+                    <span class="panel-title">SYSTEM DIAGNOSTICS</span>
+                    <div class="controls">
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                        <span class="control-dot"></span>
+                    </div>
+                </div>
+                <div id="diagnostics" class="panel-content"></div>
+            </div>
+        </div>
+        
+        <!-- Progress indicators -->
+        <div id="progress-container">
+            <div id="progress-wrapper">
+                <div id="progress-bar"></div>
+                <div id="progress-percentage">0%</div>
+            </div>
+            <div id="progress-details">
+                <div class="progress-detail">CORE INIT: <span id="core-status">OFFLINE</span></div>
+                <div class="progress-detail">NEURAL SYNC: <span id="neural-status">OFFLINE</span></div>
+                <div class="progress-detail">QUANTUM FLUX: <span id="quantum-status">OFFLINE</span></div>
+            </div>
+        </div>
+        
+        <!-- Alert popup container -->
+        <div id="alert-container"></div>
+        
+        <!-- Footer with system telemetry -->
+        <div id="footer">
+            <div id="coordinates">X:00.00 Y:00.00 Z:00.00</div>
+            <div id="date-time"></div>
+            <div id="system-temp">CORE TEMP: 0.0°C</div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="three.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
