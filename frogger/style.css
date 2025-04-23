@@ -1,0 +1,127 @@
+@font-face {
+    font-family: 'PrintChar21';
+    src: url('fonts/PrintChar21.ttf') format('truetype');
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    font-size: 10px;
+    color: rgb(0, 158, 0);
+    font-family: 'PrintChar21', monospace;
+    overflow: hidden;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    padding: 20px 0;
+}
+
+canvas {
+    background-color: black;
+    border: 4px solid #00FF00;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    max-width: 100%;
+}
+
+#start-screen {
+    position: absolute;
+    width: 448px;
+    height: 512px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 10;
+}
+
+#start-screen h1 {
+    font-size: 4rem;
+    color: #00FF00;
+    margin-bottom: 40px;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+}
+
+#start-button {
+    font-family: 'PrintChar21', monospace;
+    font-size: 2rem;
+    background-color: #00BC00;
+    color: #000;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#start-button:hover {
+    background-color: #00FF00;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+}
+
+#start-screen.hidden {
+    display: none;
+}
+
+.audio-control {
+    margin-top: 10px;
+}
+
+#mute-button {
+    font-size: 1.8rem;
+    background-color: transparent;
+    color: #00FF00;
+    border: 2px solid #00FF00;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+#mute-button:hover {
+    background-color: rgba(0, 255, 0, 0.2);
+    transform: scale(1.1);
+}
+
+#score-container {
+    display: flex;
+    justify-content: space-between;
+    width: 448px;
+    max-width: 100%;
+    margin-top: 10px;
+    font-size: 1.6rem;
+    color: #00FF00;
+    text-transform: uppercase;
+}
+
+@media (max-width: 500px) {
+    canvas, #start-screen {
+        width: 336px;
+        height: 384px;
+    }
+    
+    #score-container {
+        width: 336px;
+        font-size: 1.4rem;
+        flex-wrap: wrap;
+    }
+    
+    #score, #high-score {
+        margin-bottom: 5px;
+    }
+}

@@ -1,0 +1,429 @@
+@font-face {
+    font-family: 'PrintChar21';
+    src: url('fonts/PrintChar21.ttf') format('truetype');
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #000000;
+    font-size: 8px;
+    color: #00a2ff;
+    font-family: 'PrintChar21', monospace;
+    overflow: hidden;
+    cursor: none;
+    position: relative;
+}
+
+/* CRT screen effect overlay */
+body::before {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    z-index: 20;
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+/* Horizontal scan line */
+body::after {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(0, 162, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 183, 255, 0.3);
+    z-index: 21;
+    pointer-events: none;
+    animation: scan-line 6s linear infinite;
+}
+
+#networkCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.data-window {
+    position: absolute;
+    background-color: rgba(0, 10, 20, 0.3);
+    border: 1px solid rgba(0, 102, 204, 0.5);
+    border-radius: 2px;
+    padding: 4px 6px;
+    font-family: 'PrintChar21', monospace;
+    color: #00a2ff;
+    box-shadow: 0 0 5px rgba(0, 102, 204, 0.5), inset 0 0 3px rgba(0, 51, 102, 0.3);
+    pointer-events: none;
+    z-index: 2;
+    max-width: 180px;
+    overflow: hidden;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    max-opacity: 0.5;
+}
+
+.data-window.visible {
+    opacity: 0.5;
+    transform: scale(1);
+}
+
+.main-cursor {
+    box-shadow: 0 0 8px #0088ff, inset 0 0 5px #0055aa;
+    border: 1px solid #00aaff;
+    background-color: rgba(0, 10, 20, 0.5);
+    opacity: 0.8 !important;
+}
+
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 1px 0;
+    overflow: hidden;
+}
+
+.data-label {
+    color: #66ccff;
+    margin-right: 5px;
+}
+
+.data-value {
+    color: #ffffff;
+}
+
+.blink {
+    animation: blink-animation 0.8s steps(2, start) infinite;
+}
+
+@keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+}
+
+.glitch {
+    position: relative;
+    animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+}
+
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-1px, 1px);
+    }
+    40% {
+        transform: translate(-1px, -1px);
+    }
+    60% {
+        transform: translate(1px, 1px);
+    }
+    80% {
+        transform: translate(1px, -1px);
+    }
+    100% {
+        transform: translate(0);
+    }
+}
+
+.menu-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 20, 40, 0.8);
+    border: 2px solid #00a2ff;
+    border-radius: 3px;
+    padding: 10px 18px;
+    font-family: 'PrintChar21', monospace;
+    font-size: 16px;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 
+        0 0 15px #0088ff, 
+        inset 0 0 8px #0066cc;
+    overflow: hidden;
+    animation: pulse-glow 3s infinite;
+}
+
+.menu-btn:hover {
+    background-color: rgba(0, 40, 80, 0.9);
+}
+
+.menu-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00ffff);
+    animation: scan-line 2s linear infinite;
+}
+
+.menu-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00ffff);
+    animation: scan-line 2s linear infinite reverse;
+}
+
+.nav-btn {
+    position: absolute;
+    background-color: rgba(0, 20, 40, 0.8);
+    border: 2px solid #00a2ff;
+    border-radius: 3px;
+    padding: 8px 16px;
+    font-family: 'PrintChar21', monospace;
+    font-size: 14px;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 
+        0 0 10px #0088ff, 
+        inset 0 0 5px #0066cc;
+    transform: scale(0);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+    opacity: 0;
+}
+
+.nav-btn.visible {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00ffff);
+    animation: scan-line 2s linear infinite;
+}
+
+.nav-btn:hover {
+    background-color: rgba(0, 40, 80, 0.9);
+}
+
+.path-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.data-bracket {
+    position: absolute;
+    color: #00a2ff;
+    font-size: 14px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 9;
+}
+
+.connector-dot {
+    position: absolute;
+    background-color: #00a2ff;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+    z-index: 6;
+}
+
+.connector-dot.visible {
+    transform: scale(1);
+}
+
+/* System header bar */
+.system-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background-color: rgba(0, 20, 40, 0.8);
+    border-bottom: 1px solid #00a2ff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    font-family: 'PrintChar21', monospace;
+    color: #00a2ff;
+    z-index: 100;
+    box-shadow: 0 0 15px rgba(0, 130, 255, 0.3);
+}
+
+.system-title {
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.system-datetime {
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+/* Error message popup */
+.error-popup {
+    position: absolute;
+    background-color: rgba(40, 0, 0, 0.8);
+    border: 1px solid #ff3030;
+    border-radius: 3px;
+    padding: 15px;
+    font-family: 'PrintChar21', monospace;
+    color: #ff5050;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.3), inset 0 0 8px rgba(255, 30, 0, 0.2);
+    z-index: 50;
+    min-width: 300px;
+    max-width: 500px;
+    transform: scale(0);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    opacity: 0;
+    overflow: hidden;
+}
+
+.error-popup.visible {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.error-header {
+    color: #ff3030;
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.error-code {
+    font-size: 10px;
+    opacity: 0.8;
+}
+
+.error-content {
+    margin: 8px 0;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.progress-bar {
+    height: 4px;
+    width: 100%;
+    background-color: rgba(50, 0, 0, 0.5);
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #ff3030;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0%;
+    transition: width 0.2s linear;
+}
+
+.typing-effect {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid transparent;
+    animation: typing 1s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes scan-line {
+    0% {
+        transform: translateY(-100vh);
+    }
+    100% {
+        transform: translateY(100vh);
+    }
+}
+
+@keyframes scan-line-horizontal {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes float-away {
+    0% {
+        opacity: 0.8;
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--x-offset), var(--y-offset)) scale(1.5);
+    }
+}
+
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 0 10px #0088ff;
+    }
+    50% {
+        box-shadow: 0 0 20px #00a2ff;
+    }
+    100% {
+        box-shadow: 0 0 10px #0088ff;
+    }
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: #ff3030 }
+}
+
+/* CRT flicker effect */
+.crt-flicker {
+    animation: flicker 0.15s infinite alternate;
+}
+
+@keyframes flicker {
+    0% {
+        opacity: 0.97;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
